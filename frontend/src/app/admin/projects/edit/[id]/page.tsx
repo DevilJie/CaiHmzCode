@@ -1,6 +1,5 @@
 'use client';
 
-import { use } from 'react';
 import Link from 'next/link';
 import clsx from 'clsx';
 import { ProjectForm } from '@/components/admin/project';
@@ -9,9 +8,9 @@ import { ProjectForm } from '@/components/admin/project';
  * 项目编辑页面Props
  */
 interface PageProps {
-  params: Promise<{
+  params: {
     id: string;
-  }>;
+  };
 }
 
 /**
@@ -21,9 +20,8 @@ interface PageProps {
  * - /admin/projects/edit/123 - 编辑模式
  */
 export default function ProjectEditPage({ params }: PageProps) {
-  // 使用 use() 解析 Promise 类型的 params
-  const resolvedParams = use(params);
-  const { id } = resolvedParams;
+  // Next.js 14 中 params 不是 Promise，可以直接解构使用
+  const { id } = params;
 
   // 判断是否为新增模式
   const isNewMode = id === 'new';

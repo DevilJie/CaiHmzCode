@@ -85,13 +85,19 @@ export function AuthProvider({ children }: AuthProviderProps) {
       )) as ApiResponse<LoginResponse>;
 
       if (response.code === 200 && response.data) {
-        const { token, userInfo } = response.data;
+        // 兼容后端返回 user 或 userInfo 字段
+        const { token, user, userInfo } = response.data;
+        const userData = user || userInfo;
+
+        if (!userData) {
+          throw new Error('登录响应中缺少用户信息');
+        }
 
         // 保存Token和用户信息到本地存储
         localStorage.setItem(TOKEN_KEY, token);
-        localStorage.setItem(USER_KEY, JSON.stringify(userInfo));
+        localStorage.setItem(USER_KEY, JSON.stringify(userData));
 
-        setUser(userInfo);
+        setUser(userData);
 
         // 跳转到管理后台首页
         router.push('/admin');

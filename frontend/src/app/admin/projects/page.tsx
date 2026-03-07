@@ -42,9 +42,9 @@ export default function ProjectsPage() {
         keyword: searchKeyword || undefined,
       });
 
-      setProjects(result.content);
-      setTotalPages(result.totalPages);
-      setTotalElements(result.totalElements);
+      setProjects(result.content || []);
+      setTotalPages(result.totalPages || 1);
+      setTotalElements(result.totalElements || 0);
     } catch (error) {
       showError(error instanceof Error ? error.message : '加载项目列表失败');
     } finally {

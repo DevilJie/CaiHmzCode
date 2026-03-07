@@ -37,7 +37,7 @@ export default function TagManager({ onClose, onChanged }: TagManagerProps) {
     setLoading(true);
     try {
       const data = await adminTagService.getTags();
-      setTags(data);
+      setTags(data || []);
     } catch {
       showError('加载标签列表失败');
     } finally {

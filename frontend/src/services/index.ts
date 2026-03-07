@@ -31,3 +31,9 @@ export type {
   FeedbackListParams,
   DonationQrcodeRequest,
 } from './admin/feedback';
+export { systemConfigService } from './admin/settings';
+export { adminUserService } from './admin/user';
+export type { UserListParams } from './admin/user';
+export { dashboardService } from './admin/dashboard';
+export { adminFileUploadService } from './admin/upload';
+export type { UploadResponse } from './admin/upload';

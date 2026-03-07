@@ -87,15 +87,21 @@ export const adminFeedbackService = {
    * 获取未读数量
    */
   async getUnreadCount(): Promise<number> {
-    const response = (await apiClient.get(
-      '/admin/feedbacks/unread-count'
-    )) as ApiResponse<{ count: number }>;
+    try {
+      const response = (await apiClient.get(
+        '/admin/feedbacks/unread-count'
+      )) as ApiResponse<{ count: number }>;
 
-    if (response.code === 200 && response.data) {
-      return response.data.count;
+      if (response.code === 200 && response.data) {
+        return response.data.count;
+      }
+
+      return 0;
+    } catch {
+      // 获取未读数量失败返回0，不影响用户体验
+      console.warn('获取未读数量失败');
+      return 0;
     }
-
-    return 0;
   },
 };
 

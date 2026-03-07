@@ -88,7 +88,9 @@ public class DonationQrcodeService {
 
         DonationQrcode qrcode = new DonationQrcode();
         qrcode.setType(request.getType());
-        qrcode.setName(request.getName());
+        // 如果name为空，则根据type设置默认名称
+        qrcode.setName(request.getName() != null ? request.getName() :
+                ("WECHAT".equals(request.getType()) ? "微信支付" : "支付宝"));
         qrcode.setQrcodeUrl(request.getQrcodeUrl());
         qrcode.setIsShow(request.getIsShow() != null ? request.getIsShow() : 1);
         qrcode.setSortOrder(request.getSortOrder() != null ? request.getSortOrder() : 0);

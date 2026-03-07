@@ -78,6 +78,12 @@ public class SecurityConfig {
                         .requestMatchers("/api/v1/admin/auth/login").permitAll()
                         // 开放健康检查接口
                         .requestMatchers("/actuator/**").permitAll()
+                        // 开放 Swagger UI 和 API 文档
+                        .requestMatchers("/swagger-ui/**").permitAll()
+                        .requestMatchers("/swagger-ui.html").permitAll()
+                        .requestMatchers("/v3/api-docs/**").permitAll()
+                        .requestMatchers("/swagger-resources/**").permitAll()
+                        .requestMatchers("/webjars/**").permitAll()
                         // 开放用户端API（无需登录）
                         .requestMatchers("/api/v1/projects").permitAll()
                         .requestMatchers("/api/v1/projects/**").permitAll()

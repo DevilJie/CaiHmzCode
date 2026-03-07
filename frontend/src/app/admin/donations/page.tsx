@@ -36,7 +36,7 @@ export default function DonationsPage() {
     setLoading(true);
     try {
       const data = await adminDonationService.getQrcodes();
-      setQrcodes(data);
+      setQrcodes(data || []);
     } catch {
       showError('加载收款码列表失败');
     } finally {

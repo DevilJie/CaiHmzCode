@@ -4,7 +4,7 @@
 export interface ApiResponse<T = unknown> {
   code: number;
   message: string;
-  data: T;
+  data: T | null;
   timestamp: number;
 }
 
@@ -64,6 +64,7 @@ export interface LoginRequest {
 export interface LoginResponse {
   token: string;
   user: User;
+  userInfo?: User; // 兼容后端可能返回的字段名
 }
 
 // ==================== 项目相关 ====================

@@ -1,21 +1,20 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { use } from 'react';
 import { AdForm } from '@/components/admin/ad';
 import { adminAdService } from '@/services/advertisement';
 import { Advertisement } from '@/types';
 
 interface PageProps {
-  params: Promise<{ id: string }>;
+  params: { id: string };
 }
 
 /**
  * 编辑广告页面
  */
 export default function EditAdPage({ params }: PageProps) {
-  const resolvedParams = use(params);
-  const id = parseInt(resolvedParams.id, 10);
+  // Next.js 14 中 params 不是 Promise，可以直接解构使用
+  const id = parseInt(params.id, 10);
 
   const [ad, setAd] = useState<Advertisement | null>(null);
   const [loading, setLoading] = useState(true);

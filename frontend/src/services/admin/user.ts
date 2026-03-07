@@ -103,8 +103,7 @@ export const adminUserService = {
   async toggleUserStatus(id: number, status: number): Promise<UserResponse> {
     const response = (await apiClient.put(
       `/admin/users/${id}/status`,
-      null,
-      { params: { status } }
+      { status }
     )) as ApiResponse<UserResponse>;
 
     if (response.code === 200 && response.data) {

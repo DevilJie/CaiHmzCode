@@ -37,9 +37,9 @@ export default function BlogList() {
       };
 
       const result: PageResult<Blog> = await adminBlogService.getBlogs(params);
-      setBlogs(result.content);
-      setTotalPages(result.totalPages);
-      setTotalElements(result.totalElements);
+      setBlogs(result.content || []);
+      setTotalPages(result.totalPages || 1);
+      setTotalElements(result.totalElements || 0);
     } catch (error) {
       showError('加载博客列表失败');
     } finally {

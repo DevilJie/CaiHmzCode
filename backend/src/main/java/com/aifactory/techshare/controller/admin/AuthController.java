@@ -13,6 +13,12 @@ import com.aifactory.techshare.security.CustomUserDetailsService;
 import com.aifactory.techshare.security.JwtUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.parameters.RequestBody;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -20,10 +26,10 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -36,9 +42,11 @@ import java.time.LocalDateTime;
  * @author AI Factory
  */
 @Slf4j
+@Validated
 @RestController
 @RequestMapping("/api/v1/admin/auth")
 @RequiredArgsConstructor
+@Tag(name = "认证管理（管理端）", description = "管理员登录、登出、个人信息管理接口")
 public class AuthController {
 
     private final JwtUtil jwtUtil;
@@ -56,7 +64,13 @@ public class AuthController {
      * @return 登录响应（包含Token和用户信息）
      */
     @PostMapping("/login")
-    public Result<LoginResponse> login(@Valid @RequestBody LoginRequest request) {
+    @Operation(summary = "管理员登录", description = "使用用户名和密码登录，返回 JWT Token")
+    @ApiResponse(responseCode = "200", description = "登录成功")
+    @ApiResponse(responseCode = "401", description = "用户名或密码错误")
+    @ApiResponse(responseCode = "403", description = "用户已被禁用")
+    public Result<LoginResponse> login(
+            @RequestBody(description = "登录信息", required = true)
+            @Valid @org.springframework.web.bind.annotation.RequestBody LoginRequest request) {
         log.info("用户登录请求: {}", request.getUsername());
 
         // 查询用户
@@ -120,7 +134,11 @@ public class AuthController {
      * @return 成功响应
      */
     @PostMapping("/logout")
-    public Result<Void> logout(@AuthenticationPrincipal UserDetails userDetails) {
+    @Operation(summary = "管理员登出", description = "退出登录，前端删除 Token 即可")
+    @SecurityRequirement(name = "Bearer Authentication")
+    @ApiResponse(responseCode = "200", description = "登出成功")
+    public Result<Void> logout(
+            @Parameter(hidden = true) @AuthenticationPrincipal UserDetails userDetails) {
         if (userDetails != null) {
             log.info("用户登出: {}", userDetails.getUsername());
         }
@@ -134,7 +152,12 @@ public class AuthController {
      * @return 用户详细信息
      */
     @GetMapping("/profile")
-    public Result<UserProfileResponse> getProfile(@AuthenticationPrincipal UserDetails userDetails) {
+    @Operation(summary = "获取当前用户信息", description = "获取当前登录用户的详细信息")
+    @SecurityRequirement(name = "Bearer Authentication")
+    @ApiResponse(responseCode = "200", description = "查询成功")
+    @ApiResponse(responseCode = "401", description = "未登录")
+    public Result<UserProfileResponse> getProfile(
+            @Parameter(hidden = true) @AuthenticationPrincipal UserDetails userDetails) {
         if (userDetails == null) {
             throw new BusinessException(401, "未登录");
         }
@@ -167,9 +190,14 @@ public class AuthController {
      * @return 更新后的用户信息
      */
     @PutMapping("/profile")
+    @Operation(summary = "更新当前用户信息", description = "更新当前登录用户的个人信息（昵称、邮箱、头像）")
+    @SecurityRequirement(name = "Bearer Authentication")
+    @ApiResponse(responseCode = "200", description = "更新成功")
+    @ApiResponse(responseCode = "401", description = "未登录")
     public Result<UserProfileResponse> updateProfile(
-            @AuthenticationPrincipal UserDetails userDetails,
-            @Valid @RequestBody UpdateProfileRequest request
+            @Parameter(hidden = true) @AuthenticationPrincipal UserDetails userDetails,
+            @RequestBody(description = "用户信息", required = true)
+            @Valid @org.springframework.web.bind.annotation.RequestBody UpdateProfileRequest request
     ) {
         if (userDetails == null) {
             throw new BusinessException(401, "未登录");
@@ -223,9 +251,15 @@ public class AuthController {
      * @return 成功响应
      */
     @PutMapping("/password")
+    @Operation(summary = "修改密码", description = "修改当前登录用户的密码")
+    @SecurityRequirement(name = "Bearer Authentication")
+    @ApiResponse(responseCode = "200", description = "修改成功")
+    @ApiResponse(responseCode = "400", description = "原密码错误或新密码不符合要求")
+    @ApiResponse(responseCode = "401", description = "未登录")
     public Result<Void> changePassword(
-            @AuthenticationPrincipal UserDetails userDetails,
-            @Valid @RequestBody ChangePasswordRequest request
+            @Parameter(hidden = true) @AuthenticationPrincipal UserDetails userDetails,
+            @RequestBody(description = "密码信息", required = true)
+            @Valid @org.springframework.web.bind.annotation.RequestBody ChangePasswordRequest request
     ) {
         if (userDetails == null) {
             throw new BusinessException(401, "未登录");

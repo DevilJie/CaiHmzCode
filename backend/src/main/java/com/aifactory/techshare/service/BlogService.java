@@ -8,10 +8,12 @@ import com.aifactory.techshare.dto.BlogUpdateRequest;
 import com.aifactory.techshare.dto.TagResponse;
 import com.aifactory.techshare.entity.Blog;
 import com.aifactory.techshare.entity.BlogCategory;
+import com.aifactory.techshare.entity.BlogTag;
 import com.aifactory.techshare.entity.BlogTagRelation;
 import com.aifactory.techshare.exception.BusinessException;
 import com.aifactory.techshare.mapper.BlogCategoryMapper;
 import com.aifactory.techshare.mapper.BlogMapper;
+import com.aifactory.techshare.mapper.BlogTagMapper;
 import com.aifactory.techshare.mapper.BlogTagRelationMapper;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper;
@@ -40,6 +42,7 @@ public class BlogService {
     private final BlogMapper blogMapper;
     private final BlogCategoryMapper categoryMapper;
     private final BlogTagRelationMapper tagRelationMapper;
+    private final BlogTagMapper tagMapper;
     private final BlogTagService tagService;
 
     /**
@@ -372,6 +375,12 @@ public class BlogService {
      */
     private void saveTagRelations(Long blogId, List<Long> tagIds) {
         for (Long tagId : tagIds) {
+            // 验证标签是否存在
+            BlogTag tag = tagMapper.selectById(tagId);
+            if (tag == null) {
+                log.warn("标签不存在，跳过: tagId={}", tagId);
+                continue;
+            }
             BlogTagRelation relation = new BlogTagRelation();
             relation.setBlogId(blogId);
             relation.setTagId(tagId);

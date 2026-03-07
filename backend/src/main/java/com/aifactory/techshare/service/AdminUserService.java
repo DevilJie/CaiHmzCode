@@ -116,7 +116,7 @@ public class AdminUserService {
         user.setUsername(request.getUsername());
         user.setPassword(passwordEncoder.encode(request.getPassword()));
         user.setNickname(StringUtils.hasText(request.getNickname()) ? request.getNickname() : request.getUsername());
-        user.setEmail(request.getEmail());
+        user.setEmail(StringUtils.hasText(request.getEmail()) ? request.getEmail() : null);
         user.setAvatar(request.getAvatar());
         user.setRole(request.getRole());
         user.setStatus(1); // 默认启用
@@ -146,7 +146,7 @@ public class AdminUserService {
             user.setNickname(request.getNickname());
         }
         if (request.getEmail() != null) {
-            user.setEmail(request.getEmail());
+            user.setEmail(StringUtils.hasText(request.getEmail()) ? request.getEmail() : null);
         }
         if (request.getAvatar() != null) {
             user.setAvatar(request.getAvatar());

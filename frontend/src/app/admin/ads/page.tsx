@@ -39,9 +39,9 @@ export default function AdsPage() {
       };
 
       const result: PageResult<Advertisement> = await adminAdService.getAds(params);
-      setAds(result.content);
-      setTotalPages(result.totalPages);
-      setTotalElements(result.totalElements);
+      setAds(result.content || []);
+      setTotalPages(result.totalPages || 1);
+      setTotalElements(result.totalElements || 0);
     } catch (error) {
       showError('加载广告列表失败');
     } finally {

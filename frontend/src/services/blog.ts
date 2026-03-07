@@ -90,16 +90,22 @@ export const blogService = {
    * 获取相关博客推荐
    */
   async getRelatedBlogs(id: number, limit?: number): Promise<Blog[]> {
-    const response = (await apiClient.get(`/blogs/${id}/related`, {
-      params: { limit: limit || 5 },
-    })) as ApiResponse<Blog[]>;
+    try {
+      const response = (await apiClient.get(`/blogs/${id}/related`, {
+        params: { limit: limit || 5 },
+      })) as ApiResponse<Blog[]>;
 
-    if (response.code === 200 && response.data) {
-      return response.data;
+      if (response.code === 200 && response.data) {
+        return response.data;
+      }
+
+      // 相关博客获取失败返回空数组
+      return [];
+    } catch {
+      // 请求异常时返回空数组，不影响用户体验
+      console.warn('获取相关博客失败');
+      return [];
     }
-
-    // 相关博客获取失败返回空数组
-    return [];
   },
 };
 

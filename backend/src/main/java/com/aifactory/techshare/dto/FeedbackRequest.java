@@ -4,13 +4,17 @@ import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
 import lombok.Data;
 
+import java.io.Serializable;
+
 /**
  * 提交反馈请求DTO
  *
  * @author AI Factory
  */
 @Data
-public class FeedbackRequest {
+public class FeedbackRequest implements Serializable {
+
+    private static final long serialVersionUID = 1L;
 
     /**
      * 姓名（选填）

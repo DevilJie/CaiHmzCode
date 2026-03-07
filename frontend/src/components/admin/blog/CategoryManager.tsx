@@ -44,7 +44,7 @@ export default function CategoryManager({
     setLoading(true);
     try {
       const data = await adminCategoryService.getCategories();
-      setCategories(data);
+      setCategories(data || []);
     } catch {
       showError('加载分类列表失败');
     } finally {

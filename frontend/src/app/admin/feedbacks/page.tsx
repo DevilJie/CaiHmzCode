@@ -39,9 +39,9 @@ export default function FeedbacksPage() {
       };
 
       const result: PageResult<Feedback> = await adminFeedbackService.getFeedbacks(params);
-      setFeedbacks(result.content);
-      setTotalPages(result.totalPages);
-      setTotalElements(result.totalElements);
+      setFeedbacks(result.content || []);
+      setTotalPages(result.totalPages || 1);
+      setTotalElements(result.totalElements || 0);
       setSelectedIds([]); // 重置选中
     } catch {
       showError('加载反馈列表失败');

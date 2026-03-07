@@ -18,7 +18,7 @@ export default function DonationPage() {
   const loadQrcodes = async () => {
     try {
       const data = await feedbackService.getDonationQrcodes();
-      setQrcodes(data);
+      setQrcodes(data || []);
     } catch {
       console.error('加载收款码失败');
     } finally {

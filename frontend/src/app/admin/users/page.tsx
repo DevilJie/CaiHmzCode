@@ -206,7 +206,7 @@ export default function UsersPage() {
           <div className="flex h-64 items-center justify-center">
             <div className="h-8 w-8 animate-spin rounded-full border-4 border-primary-200 border-t-primary-600"></div>
           </div>
-        ) : users && users.list.length > 0 ? (
+        ) : users && users.list && users.list.length > 0 ? (
           <>
             <table className="min-w-full divide-y divide-secondary-200">
               <thead>

@@ -46,8 +46,11 @@ export function useAuth(): UseAuthReturn {
     (redirectToLogin = true): boolean => {
       // 如果还在加载中，不进行检查
       if (authContext.isLoading) {
+        setIsChecking(true);
         return false;
       }
+
+      setIsChecking(false);
 
       if (!authContext.isAuthenticated) {
         if (redirectToLogin) {

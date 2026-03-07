@@ -4,13 +4,17 @@ import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
 import lombok.Data;
 
+import java.io.Serializable;
+
 /**
  * 收款码请求DTO
  *
  * @author AI Factory
  */
 @Data
-public class DonationQrcodeRequest {
+public class DonationQrcodeRequest implements Serializable {
+
+    private static final long serialVersionUID = 1L;
 
     /**
      * 类型（WECHAT: 微信, ALIPAY: 支付宝）
