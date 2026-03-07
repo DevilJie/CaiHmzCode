@@ -1,0 +1,92 @@
+{
+  "featureName": "tech-share-website",
+  "createdAt": "2026-03-07",
+  "status": "in_progress",
+  "features": [
+    {
+      "id": "BE-001",
+      "devType": "backend",
+      "description": "后端项目初始化 - Spring Boot 3.2 + Java 21",
+      "steps": [
+        "创建pom.xml配置文件（Spring Boot 3.2.5 + Java 21）",
+        "配置application.yml（开发/生产环境分离）",
+        "创建统一响应结构 Result<T>",
+        "创建全局异常处理器 GlobalExceptionHandler",
+        "配置MyBatis-Plus分页插件",
+        "配置Redis序列化"
+      ],
+      "passes": false,
+      "status": "pending"
+    },
+    {
+      "id": "BE-002",
+      "devType": "backend",
+      "description": "JWT认证模块 - Token生成/验证/过滤",
+      "dependencies": ["BE-001"],
+      "steps": [
+        "创建JwtUtil工具类",
+        "创建JwtAuthenticationFilter过滤器",
+        "配置Spring Security",
+        "创建认证相关DTO和Controller"
+      ],
+      "passes": false,
+      "status": "pending"
+    },
+    {
+      "id": "BE-003",
+      "devType": "backend",
+      "description": "文件上传模块 - 本地图片存储",
+      "dependencies": ["BE-001"],
+      "steps": [
+        "创建FileUploadService",
+        "实现图片上传接口",
+        "文件类型和大小校验",
+        "配置静态资源映射"
+      ],
+      "passes": false,
+      "status": "pending"
+    },
+    {
+      "id": "FE-001",
+      "devType": "frontend",
+      "description": "前端项目初始化 - Next.js 14 + React 18",
+      "steps": [
+        "创建Next.js 14项目（App Router）",
+        "安装核心依赖（tailwindcss, axios, react-query等）",
+        "配置tailwind.config.js和next.config.js",
+        "创建API客户端和React Query Provider",
+        "创建通用布局组件（UserLayout, AdminLayout）"
+      ],
+      "passes": false,
+      "status": "pending"
+    },
+    {
+      "id": "FE-002",
+      "devType": "frontend",
+      "description": "用户端基础组件 - 导航栏、页脚、通用UI",
+      "dependencies": ["FE-001"],
+      "steps": [
+        "创建Navbar导航栏组件",
+        "创建Footer页脚组件",
+        "创建Loading加载组件",
+        "创建Toast提示组件"
+      ],
+      "passes": false,
+      "status": "pending"
+    },
+    {
+      "id": "FE-003",
+      "devType": "frontend",
+      "description": "管理端基础布局 - 侧边栏、顶栏",
+      "dependencies": ["FE-001"],
+      "steps": [
+        "创建AdminSidebar侧边栏组件",
+        "创建AdminHeader顶栏组件",
+        "创建AdminLayout布局组件",
+        "实现菜单折叠功能"
+      ],
+      "passes": false,
+      "status": "pending"
+    }
+  ]
+}
