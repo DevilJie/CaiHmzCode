@@ -20,7 +20,6 @@ import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Service;
@@ -49,9 +48,14 @@ public class ProjectService {
     private final ProjectMapper projectMapper;
     private final ProjectReadmeMapper projectReadmeMapper;
     private final ObjectMapper objectMapper;
+    private final SystemConfigService systemConfigService;
 
-    @Value("${github.token:}")
-    private String githubToken;
+    /**
+     * 获取GitHub Token（从系统配置获取）
+     */
+    private String getGithubToken() {
+        return systemConfigService.getConfigValue("GITHUB_TOKEN");
+    }
 
     /**
      * 管理端分页查询项目列表
@@ -313,8 +317,9 @@ public class ProjectService {
                 .defaultHeader(HttpHeaders.USER_AGENT, "TechShare-App");
 
         // 如果配置了GitHub Token，添加认证头
-        if (StringUtils.hasText(githubToken)) {
-            builder.defaultHeader(HttpHeaders.AUTHORIZATION, "Bearer " + githubToken);
+        String token = getGithubToken();
+        if (StringUtils.hasText(token)) {
+            builder.defaultHeader(HttpHeaders.AUTHORIZATION, "Bearer " + token);
         }
 
         WebClient webClient = builder.build();

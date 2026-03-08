@@ -22,6 +22,7 @@ export interface ToastConfig {
  */
 interface ToastContextType {
   toasts: ToastConfig[];
+  showToast: (type: ToastType, message: string, duration?: number) => void;
   showSuccess: (message: string, duration?: number) => void;
   showError: (message: string, duration?: number) => void;
   showWarning: (message: string, duration?: number) => void;
@@ -121,6 +122,7 @@ export function ToastProvider({ children }: { children: ReactNode }) {
     <ToastContext.Provider
       value={{
         toasts,
+        showToast: addToast,
         showSuccess,
         showError,
         showWarning,

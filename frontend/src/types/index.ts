@@ -12,6 +12,8 @@ export interface ApiResponse<T = unknown> {
  * 分页请求参数
  */
 export interface PageParams {
+  page?: number;
+  size?: number;
   pageNum?: number;
   pageSize?: number;
   keyword?: string;
@@ -200,6 +202,8 @@ export interface Advertisement {
   startTime: string;
   endTime: string;
   status: number;
+  createTime: string;
+  updateTime: string;
 }
 
 // ==================== 系统配置相关 ====================

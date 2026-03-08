@@ -46,10 +46,6 @@ jwt:
   header: Authorization
   prefix: "Bearer "
 
-# GitHub配置（用于获取README）
-github:
-  token:   # GitHub Personal Access Token，用于提高API调用限制
-
 # 日志配置
 logging:
   level:

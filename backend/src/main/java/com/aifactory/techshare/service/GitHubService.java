@@ -2,7 +2,6 @@ package com.aifactory.techshare.service;
 
 import com.aifactory.techshare.exception.BusinessException;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Service;
@@ -27,17 +26,23 @@ public class GitHubService {
             "https?://github\\.com/([^/]+)/([^/]+)/?.*"
     );
 
-    @Value("${github.token:}")
-    private String githubToken;
-
+    private final SystemConfigService systemConfigService;
     private final WebClient webClient;
 
-    public GitHubService() {
+    public GitHubService(SystemConfigService systemConfigService) {
+        this.systemConfigService = systemConfigService;
         this.webClient = WebClient.builder()
                 .baseUrl(GITHUB_API_BASE_URL)
                 .defaultHeader(HttpHeaders.ACCEPT, MediaType.APPLICATION_JSON_VALUE)
                 .codecs(configurer -> configurer.defaultCodecs().maxInMemorySize(10 * 1024 * 1024))
                 .build();
+    }
+
+    /**
+     * 获取GitHub Token（从系统配置获取）
+     */
+    private String getGithubToken() {
+        return systemConfigService.getConfigValue("GITHUB_TOKEN");
     }
 
     /**
@@ -97,8 +102,9 @@ public class GitHubService {
                     .uri("/repos/{owner}/{repo}/readme", owner, repo);
 
             // 添加Token认证（如果配置了）
-            if (githubToken != null && !githubToken.isBlank()) {
-                request.header("Authorization", "Bearer " + githubToken);
+            String token = getGithubToken();
+            if (token != null && !token.isBlank()) {
+                request.header("Authorization", "Bearer " + token);
             }
 
             GitHubReadmeResponse response = request
