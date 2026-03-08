@@ -21,6 +21,7 @@ export default function ProjectCard({ project }: ProjectCardProps) {
   return (
     <Link
       href={`/projects/${id}`}
+      data-testid="project-card"
       className="group block bg-white rounded-xl shadow-card overflow-hidden hover:shadow-lg transition-all duration-300 hover:-translate-y-1"
     >
       {/* 封面图 */}

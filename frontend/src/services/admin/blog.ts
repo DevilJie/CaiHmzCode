@@ -153,12 +153,27 @@ export interface CategoryRequest {
  */
 export const adminCategoryService = {
   /**
-   * 获取所有分类
+   * 获取所有分类（不分页）
    */
   async getCategories(): Promise<BlogCategory[]> {
     const response = (await apiClient.get(
-      '/admin/blog-categories'
+      '/admin/blog-categories/all'
     )) as ApiResponse<BlogCategory[]>;
+
+    if (response.code === 200 && response.data) {
+      return response.data;
+    }
+
+    throw new Error(response.message || '获取分类列表失败');
+  },
+
+  /**
+   * 获取分类列表（分页）
+   */
+  async getCategoriesPage(params?: PageParams): Promise<PageResult<BlogCategory>> {
+    const response = (await apiClient.get('/admin/blog-categories', {
+      params,
+    })) as ApiResponse<PageResult<BlogCategory>>;
 
     if (response.code === 200 && response.data) {
       return response.data;
@@ -227,12 +242,27 @@ export interface TagRequest {
  */
 export const adminTagService = {
   /**
-   * 获取所有标签
+   * 获取所有标签（不分页）
    */
   async getTags(): Promise<BlogTag[]> {
     const response = (await apiClient.get(
-      '/admin/blog-tags'
+      '/admin/blog-tags/all'
     )) as ApiResponse<BlogTag[]>;
+
+    if (response.code === 200 && response.data) {
+      return response.data;
+    }
+
+    throw new Error(response.message || '获取标签列表失败');
+  },
+
+  /**
+   * 获取标签列表（分页）
+   */
+  async getTagsPage(params?: PageParams): Promise<PageResult<BlogTag>> {
+    const response = (await apiClient.get('/admin/blog-tags', {
+      params,
+    })) as ApiResponse<PageResult<BlogTag>>;
 
     if (response.code === 200 && response.data) {
       return response.data;

@@ -1,5 +1,6 @@
 package com.aifactory.techshare.service;
 
+import com.aifactory.techshare.common.PageResult;
 import com.aifactory.techshare.dto.CategoryRequest;
 import com.aifactory.techshare.dto.CategoryResponse;
 import com.aifactory.techshare.entity.BlogCategory;
@@ -53,7 +54,7 @@ public class BlogCategoryService {
      * @param pageSize 每页数量
      * @return 分页结果
      */
-    public Page<CategoryResponse> getCategoryPage(int pageNum, int pageSize) {
+    public PageResult<CategoryResponse> getCategoryPage(int pageNum, int pageSize) {
         Page<BlogCategory> page = new Page<>(pageNum, pageSize);
         Page<BlogCategory> categoryPage = categoryMapper.selectPage(page,
                 new LambdaQueryWrapper<BlogCategory>()
@@ -61,13 +62,11 @@ public class BlogCategoryService {
                         .orderByDesc(BlogCategory::getCreateTime)
         );
 
-        Page<CategoryResponse> responsePage = new Page<>(pageNum, pageSize, categoryPage.getTotal());
-        responsePage.setRecords(
-                categoryPage.getRecords().stream()
-                        .map(this::convertToResponse)
-                        .collect(Collectors.toList())
-        );
-        return responsePage;
+        List<CategoryResponse> list = categoryPage.getRecords().stream()
+                .map(this::convertToResponse)
+                .collect(Collectors.toList());
+
+        return new PageResult<>(list, categoryPage.getTotal(), pageNum, pageSize);
     }
 
     /**

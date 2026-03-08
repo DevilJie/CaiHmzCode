@@ -48,9 +48,9 @@ export default function BlogsPage() {
     staleTime: 10 * 60 * 1000, // 10分钟缓存
   });
 
-  const blogs = blogData?.content || [];
-  const totalPages = blogData?.totalPages || 0;
-  const totalElements = blogData?.totalElements || 0;
+  const blogs = blogData?.list || [];
+  const totalPages = blogData?.pages || 0;
+  const totalElements = blogData?.total || 0;
 
   // 当筛选条件变化时重置页码
   useEffect(() => {

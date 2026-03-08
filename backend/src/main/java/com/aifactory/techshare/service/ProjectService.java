@@ -28,6 +28,10 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
 import org.springframework.web.reactive.function.client.WebClient;
 
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Cacheable;
+import org.springframework.cache.annotation.Caching;
+
 import java.time.LocalDateTime;
 import java.util.Collections;
 import java.util.List;
@@ -55,6 +59,7 @@ public class ProjectService {
      * @param request 查询参数
      * @return 分页结果
      */
+    @Cacheable(value = "projects:admin", key = "#request.pageNum + '_' + #request.pageSize + '_' + #request.keyword + '_' + #request.isShow")
     public PageResult<ProjectResponse> getAdminProjectList(AdminProjectListRequest request) {
         // 构建查询条件
         LambdaQueryWrapper<Project> queryWrapper = new LambdaQueryWrapper<>();
@@ -91,6 +96,7 @@ public class ProjectService {
      * @param id 项目ID
      * @return 项目详情
      */
+    @Cacheable(value = "project:detail", key = "#id")
     public ProjectResponse getProjectById(Long id) {
         Project project = projectMapper.selectById(id);
         if (project == null) {
@@ -106,6 +112,7 @@ public class ProjectService {
      * @return 项目详情
      */
     @Transactional(rollbackFor = Exception.class)
+    @CacheEvict(value = {"projects", "projects:admin"}, allEntries = true)
     public ProjectResponse createProject(ProjectCreateRequest request) {
         // 检查项目名称是否重复
         LambdaQueryWrapper<Project> queryWrapper = new LambdaQueryWrapper<Project>()
@@ -139,6 +146,11 @@ public class ProjectService {
      * @return 项目详情
      */
     @Transactional(rollbackFor = Exception.class)
+    @Caching(evict = {
+            @CacheEvict(value = "project:detail", key = "#id"),
+            @CacheEvict(value = "project:user:detail", key = "#id"),
+            @CacheEvict(value = {"projects", "projects:admin"}, allEntries = true)
+    })
     public ProjectResponse updateProject(Long id, ProjectUpdateRequest request) {
         Project project = projectMapper.selectById(id);
         if (project == null) {
@@ -196,6 +208,11 @@ public class ProjectService {
      * @param id 项目ID
      */
     @Transactional(rollbackFor = Exception.class)
+    @Caching(evict = {
+            @CacheEvict(value = "project:detail", key = "#id"),
+            @CacheEvict(value = "project:user:detail", key = "#id"),
+            @CacheEvict(value = {"projects", "projects:admin"}, allEntries = true)
+    })
     public void deleteProject(Long id) {
         Project project = projectMapper.selectById(id);
         if (project == null) {
@@ -213,6 +230,7 @@ public class ProjectService {
      * @return 是否成功
      */
     @Transactional(rollbackFor = Exception.class)
+    @CacheEvict(value = "project:detail", key = "#id")
     public boolean syncReadme(Long id) {
         Project project = projectMapper.selectById(id);
         if (project == null) {
@@ -416,6 +434,7 @@ public class ProjectService {
      * @param request 查询参数
      * @return 分页项目列表
      */
+    @Cacheable(value = "projects", key = "#request.pageNum + '_' + #request.pageSize + '_' + #request.keyword + '_' + #request.techTag")
     public PageResult<ProjectResponse> getUserProjectList(ProjectListRequest request) {
         Page<Project> page = new Page<>(request.getPageNum(), request.getPageSize());
 
@@ -457,6 +476,7 @@ public class ProjectService {
      * @param id 项目ID
      * @return 项目详情
      */
+    @Cacheable(value = "project:user:detail", key = "#id")
     public ProjectDetailResponse getUserProjectDetail(Long id) {
         Project project = projectMapper.selectById(id);
         if (project == null || project.getIsShow() != 1) {

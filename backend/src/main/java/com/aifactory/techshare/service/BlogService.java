@@ -20,6 +20,9 @@ import com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Cacheable;
+import org.springframework.cache.annotation.Caching;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.CollectionUtils;
@@ -55,6 +58,7 @@ public class BlogService {
      * @param keyword    关键词（可选）
      * @return 分页结果
      */
+    @Cacheable(value = "blogs", key = "#pageNum + '_' + #pageSize + '_' + #categoryId + '_' + #tagId + '_' + #keyword")
     public PageResult<BlogResponse> getPublishedBlogList(int pageNum, int pageSize,
                                                           Long categoryId, Long tagId, String keyword) {
         // 构建查询条件
@@ -110,6 +114,7 @@ public class BlogService {
      * @param id 博客ID
      * @return 博客详情
      */
+    @Cacheable(value = "blog:detail", key = "#id")
     public BlogDetailResponse getBlogDetail(Long id) {
         Blog blog = blogMapper.selectById(id);
         if (blog == null) {
@@ -147,6 +152,7 @@ public class BlogService {
      * @param keyword    关键词（可选）
      * @return 分页结果
      */
+    @Cacheable(value = "blogs:admin", key = "#pageNum + '_' + #pageSize + '_' + #status + '_' + #categoryId + '_' + #keyword")
     public PageResult<BlogResponse> getBlogListForAdmin(int pageNum, int pageSize,
                                                          Integer status, Long categoryId, String keyword) {
         // 构建查询条件
@@ -190,6 +196,7 @@ public class BlogService {
      * @param id 博客ID
      * @return 博客详情
      */
+    @Cacheable(value = "blog:admin:detail", key = "#id")
     public BlogDetailResponse getBlogDetailForAdmin(Long id) {
         Blog blog = blogMapper.selectById(id);
         if (blog == null) {
@@ -205,6 +212,7 @@ public class BlogService {
      * @return 博客详情
      */
     @Transactional(rollbackFor = Exception.class)
+    @CacheEvict(value = {"blogs", "blogs:admin"}, allEntries = true)
     public BlogDetailResponse createBlog(BlogCreateRequest request) {
         // 验证分类是否存在
         if (request.getCategoryId() != null) {
@@ -243,6 +251,11 @@ public class BlogService {
      * @return 博客详情
      */
     @Transactional(rollbackFor = Exception.class)
+    @Caching(evict = {
+            @CacheEvict(value = "blog:detail", key = "#id"),
+            @CacheEvict(value = "blog:admin:detail", key = "#id"),
+            @CacheEvict(value = {"blogs", "blogs:admin"}, allEntries = true)
+    })
     public BlogDetailResponse updateBlog(Long id, BlogUpdateRequest request) {
         Blog blog = blogMapper.selectById(id);
         if (blog == null) {
@@ -303,6 +316,11 @@ public class BlogService {
      * @return 博客详情
      */
     @Transactional(rollbackFor = Exception.class)
+    @Caching(evict = {
+            @CacheEvict(value = "blog:detail", key = "#id"),
+            @CacheEvict(value = "blog:admin:detail", key = "#id"),
+            @CacheEvict(value = {"blogs", "blogs:admin"}, allEntries = true)
+    })
     public BlogDetailResponse publishBlog(Long id) {
         Blog blog = blogMapper.selectById(id);
         if (blog == null) {
@@ -329,6 +347,11 @@ public class BlogService {
      * @return 博客详情
      */
     @Transactional(rollbackFor = Exception.class)
+    @Caching(evict = {
+            @CacheEvict(value = "blog:detail", key = "#id"),
+            @CacheEvict(value = "blog:admin:detail", key = "#id"),
+            @CacheEvict(value = {"blogs", "blogs:admin"}, allEntries = true)
+    })
     public BlogDetailResponse unpublishBlog(Long id) {
         Blog blog = blogMapper.selectById(id);
         if (blog == null) {
@@ -353,6 +376,11 @@ public class BlogService {
      * @param id 博客ID
      */
     @Transactional(rollbackFor = Exception.class)
+    @Caching(evict = {
+            @CacheEvict(value = "blog:detail", key = "#id"),
+            @CacheEvict(value = "blog:admin:detail", key = "#id"),
+            @CacheEvict(value = {"blogs", "blogs:admin"}, allEntries = true)
+    })
     public void deleteBlog(Long id) {
         Blog blog = blogMapper.selectById(id);
         if (blog == null) {

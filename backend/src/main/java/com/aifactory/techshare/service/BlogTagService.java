@@ -1,5 +1,6 @@
 package com.aifactory.techshare.service;
 
+import com.aifactory.techshare.common.PageResult;
 import com.aifactory.techshare.dto.TagRequest;
 import com.aifactory.techshare.dto.TagResponse;
 import com.aifactory.techshare.entity.BlogTag;
@@ -53,20 +54,18 @@ public class BlogTagService {
      * @param pageSize 每页数量
      * @return 分页结果
      */
-    public Page<TagResponse> getTagPage(int pageNum, int pageSize) {
+    public PageResult<TagResponse> getTagPage(int pageNum, int pageSize) {
         Page<BlogTag> page = new Page<>(pageNum, pageSize);
         Page<BlogTag> tagPage = tagMapper.selectPage(page,
                 new LambdaQueryWrapper<BlogTag>()
                         .orderByDesc(BlogTag::getCreateTime)
         );
 
-        Page<TagResponse> responsePage = new Page<>(pageNum, pageSize, tagPage.getTotal());
-        responsePage.setRecords(
-                tagPage.getRecords().stream()
-                        .map(this::convertToResponse)
-                        .collect(Collectors.toList())
-        );
-        return responsePage;
+        List<TagResponse> list = tagPage.getRecords().stream()
+                .map(this::convertToResponse)
+                .collect(Collectors.toList());
+
+        return new PageResult<>(list, tagPage.getTotal(), pageNum, pageSize);
     }
 
     /**

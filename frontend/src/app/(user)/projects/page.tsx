@@ -21,9 +21,9 @@ export default function ProjectsPage() {
     staleTime: 5 * 60 * 1000, // 5分钟缓存
   });
 
-  const projects = data?.content || [];
-  const totalPages = data?.totalPages || 0;
-  const totalElements = data?.totalElements || 0;
+  const projects = data?.list || [];
+  const totalPages = data?.pages || 0;
+  const totalElements = data?.total || 0;
 
   // 页码变化处理
   const handlePageChange = (newPage: number) => {

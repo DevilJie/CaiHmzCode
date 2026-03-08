@@ -1,10 +1,10 @@
 package com.aifactory.techshare.controller.admin;
 
+import com.aifactory.techshare.common.PageResult;
 import com.aifactory.techshare.common.Result;
 import com.aifactory.techshare.dto.CategoryRequest;
 import com.aifactory.techshare.dto.CategoryResponse;
 import com.aifactory.techshare.service.BlogCategoryService;
-import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.parameters.RequestBody;
@@ -57,13 +57,13 @@ public class AdminBlogCategoryController {
     @GetMapping
     @Operation(summary = "获取分类列表（分页）", description = "分页查询博客分类列表")
     @ApiResponse(responseCode = "200", description = "查询成功")
-    public Result<Page<CategoryResponse>> getCategoryList(
+    public Result<PageResult<CategoryResponse>> getCategoryList(
             @Parameter(description = "页码，从1开始", example = "1")
             @RequestParam(defaultValue = "1") @Min(value = 1, message = "页码最小为1") int pageNum,
             @Parameter(description = "每页数量，最大100", example = "10")
             @RequestParam(defaultValue = "10") @Min(value = 1, message = "每页数量最小为1") @Max(value = 100, message = "每页数量最大为100") int pageSize) {
         log.info("管理端获取分类列表: pageNum={}, pageSize={}", pageNum, pageSize);
-        Page<CategoryResponse> result = categoryService.getCategoryPage(pageNum, pageSize);
+        PageResult<CategoryResponse> result = categoryService.getCategoryPage(pageNum, pageSize);
         return Result.success(result);
     }
 

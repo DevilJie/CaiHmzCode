@@ -1,10 +1,10 @@
 package com.aifactory.techshare.controller.admin;
 
+import com.aifactory.techshare.common.PageResult;
 import com.aifactory.techshare.common.Result;
 import com.aifactory.techshare.dto.TagRequest;
 import com.aifactory.techshare.dto.TagResponse;
 import com.aifactory.techshare.service.BlogTagService;
-import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.parameters.RequestBody;
@@ -57,13 +57,13 @@ public class AdminBlogTagController {
     @GetMapping
     @Operation(summary = "获取标签列表（分页）", description = "分页查询博客标签列表")
     @ApiResponse(responseCode = "200", description = "查询成功")
-    public Result<Page<TagResponse>> getTagList(
+    public Result<PageResult<TagResponse>> getTagList(
             @Parameter(description = "页码，从1开始", example = "1")
             @RequestParam(defaultValue = "1") @Min(value = 1, message = "页码最小为1") int pageNum,
             @Parameter(description = "每页数量，最大100", example = "10")
             @RequestParam(defaultValue = "10") @Min(value = 1, message = "每页数量最小为1") @Max(value = 100, message = "每页数量最大为100") int pageSize) {
         log.info("管理端获取标签列表: pageNum={}, pageSize={}", pageNum, pageSize);
-        Page<TagResponse> result = tagService.getTagPage(pageNum, pageSize);
+        PageResult<TagResponse> result = tagService.getTagPage(pageNum, pageSize);
         return Result.success(result);
     }
 
