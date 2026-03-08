@@ -55,3 +55,24 @@ backend/uploads/
 
 # Lock files
 *.lock
+
+# Testing & Reports (auto-tester / Playwright)
+test-results/
+playwright-report/
+docs/hotfix/
+docs/test-results/
+*.test.js
+*.spec.js
+tests
+
+# Screenshots & Recordings
+*.png
+!coverage/
+mobile-viewport.png
+
+/package-lock.json
+/package.json
+/playwright.config.js
+/nul
+/current-state
+/run-tests.bat

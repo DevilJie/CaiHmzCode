@@ -11,13 +11,13 @@ import Pagination from '@/components/ui/Pagination';
  * 展示所有项目卡片，支持分页
  */
 export default function ProjectsPage() {
-  const [page, setPage] = useState(0);
+  const [page, setPage] = useState(1);
   const pageSize = 12;
 
   // 获取项目列表
   const { data, isLoading, isError, error } = useQuery({
     queryKey: ['projects', page, pageSize],
-    queryFn: () => projectService.getProjects({ page, size: pageSize }),
+    queryFn: () => projectService.getProjects({ pageNum: page, pageSize }),
     staleTime: 5 * 60 * 1000, // 5分钟缓存
   });
 
@@ -27,7 +27,7 @@ export default function ProjectsPage() {
 
   // 页码变化处理
   const handlePageChange = (newPage: number) => {
-    setPage(newPage - 1); // 后端页码从0开始
+    setPage(newPage);
     // 滚动到顶部
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
@@ -84,7 +84,7 @@ export default function ProjectsPage() {
       {totalPages > 1 && (
         <div className="mt-8">
           <Pagination
-            currentPage={page + 1}
+            currentPage={page}
             totalPages={totalPages}
             onPageChange={handlePageChange}
           />

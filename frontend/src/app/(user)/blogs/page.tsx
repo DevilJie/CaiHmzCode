@@ -11,7 +11,7 @@ import Pagination from '@/components/ui/Pagination';
  * 展示博客列表，支持分类/标签筛选和分页
  */
 export default function BlogsPage() {
-  const [page, setPage] = useState(0);
+  const [page, setPage] = useState(1);
   const [categoryId, setCategoryId] = useState<number | undefined>();
   const [tagId, setTagId] = useState<number | undefined>();
   const pageSize = 9;
@@ -26,8 +26,8 @@ export default function BlogsPage() {
     queryKey: ['blogs', page, pageSize, categoryId, tagId],
     queryFn: () =>
       blogService.getBlogs({
-        page,
-        size: pageSize,
+        pageNum: page,
+        pageSize,
         categoryId,
         tagId,
       }),
@@ -54,12 +54,12 @@ export default function BlogsPage() {
 
   // 当筛选条件变化时重置页码
   useEffect(() => {
-    setPage(0);
+    setPage(1);
   }, [categoryId, tagId]);
 
   // 页码变化处理
   const handlePageChange = (newPage: number) => {
-    setPage(newPage - 1); // 后端页码从0开始
+    setPage(newPage);
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
@@ -186,7 +186,7 @@ export default function BlogsPage() {
           {totalPages > 1 && (
             <div className="mt-8">
               <Pagination
-                currentPage={page + 1}
+                currentPage={page}
                 totalPages={totalPages}
                 onPageChange={handlePageChange}
               />

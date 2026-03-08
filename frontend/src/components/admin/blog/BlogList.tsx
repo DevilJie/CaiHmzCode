@@ -30,16 +30,16 @@ export default function BlogList() {
     setLoading(true);
     try {
       const params: BlogListParams = {
-        page: currentPage - 1,
-        size: 10,
+        pageNum: currentPage,
+        pageSize: 10,
         keyword: keyword || undefined,
         status: statusFilter,
       };
 
       const result: PageResult<Blog> = await adminBlogService.getBlogs(params);
-      setBlogs(result.content || []);
-      setTotalPages(result.totalPages || 1);
-      setTotalElements(result.totalElements || 0);
+      setBlogs(result.list || []);
+      setTotalPages(result.pages || 1);
+      setTotalElements(result.total || 0);
     } catch (error) {
       showError('加载博客列表失败');
     } finally {

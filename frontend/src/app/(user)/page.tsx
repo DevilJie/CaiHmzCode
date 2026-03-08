@@ -17,11 +17,11 @@ export default function HomePage() {
   // 获取首页展示的项目（取前4个）
   const { data: projectsData, isLoading } = useQuery({
     queryKey: ['projects', 'home'],
-    queryFn: () => projectService.getProjects({ page: 0, size: 4 }),
+    queryFn: () => projectService.getProjects({ pageNum: 1, pageSize: 4 }),
     staleTime: 5 * 60 * 1000, // 5分钟缓存
   });
 
-  const projects = projectsData?.content || [];
+  const projects = projectsData?.list || [];
 
   /**
    * 功能卡片数据

@@ -128,7 +128,7 @@ export default function ProjectForm({ projectId }: ProjectFormProps) {
 
       const result = await response.json();
       if (result.code === 200 && result.data) {
-        updateField('coverImage', result.data);
+        updateField('coverImage', result.data.url);
         showSuccess('图片上传成功');
       } else {
         throw new Error(result.message || '上传失败');

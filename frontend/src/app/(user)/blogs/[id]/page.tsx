@@ -18,7 +18,9 @@ interface BlogDetailPageProps {
  * 展示博客完整信息，包括视频、Markdown内容、相关推荐
  */
 export default function BlogDetailPage({ params }: BlogDetailPageProps) {
-  const { id } = use(params);
+  // Next.js 14 中 params 可能是 Promise 或普通对象
+  const resolvedParams = params instanceof Promise ? use(params) : params;
+  const { id } = resolvedParams;
   const blogId = parseInt(id, 10);
 
   // 获取博客详情

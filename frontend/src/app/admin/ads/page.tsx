@@ -31,17 +31,17 @@ export default function AdsPage() {
     setLoading(true);
     try {
       const params: AdListParams = {
-        page: currentPage - 1,
-        size: 10,
+        pageNum: currentPage,
+        pageSize: 10,
         position: positionFilter,
         status: statusFilter,
         keyword: keyword || undefined,
       };
 
       const result: PageResult<Advertisement> = await adminAdService.getAds(params);
-      setAds(result.content || []);
-      setTotalPages(result.totalPages || 1);
-      setTotalElements(result.totalElements || 0);
+      setAds(result.list || []);
+      setTotalPages(result.pages || 1);
+      setTotalElements(result.total || 0);
     } catch (error) {
       showError('加载广告列表失败');
     } finally {

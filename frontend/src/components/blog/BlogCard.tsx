@@ -16,12 +16,14 @@ interface BlogCardProps {
 /**
  * 格式化日期
  */
-function formatDate(dateString: string): string {
+function formatDate(dateString: string | undefined | null): string {
+  if (!dateString) return '暂未发布';
   try {
     const date = new Date(dateString);
+    if (isNaN(date.getTime())) return '暂未发布';
     return format(date, 'yyyy年MM月dd日', { locale: zhCN });
   } catch {
-    return dateString;
+    return '暂未发布';
   }
 }
 

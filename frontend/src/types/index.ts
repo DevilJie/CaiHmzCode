@@ -12,9 +12,10 @@ export interface ApiResponse<T = unknown> {
  * 分页请求参数
  */
 export interface PageParams {
-  page?: number;
-  size?: number;
+  pageNum?: number;
+  pageSize?: number;
   keyword?: string;
+  techTag?: string;
 }
 
 /**

@@ -18,7 +18,9 @@ interface ProjectDetailPageProps {
  * 展示项目完整信息，包括README内容
  */
 export default function ProjectDetailPage({ params }: ProjectDetailPageProps) {
-  const { id } = use(params);
+  // 兼容处理：params 可能是 Promise 或普通对象
+  const resolvedParams = params instanceof Promise ? use(params) : params;
+  const { id } = resolvedParams;
   const projectId = parseInt(id, 10);
 
   // 获取项目详情

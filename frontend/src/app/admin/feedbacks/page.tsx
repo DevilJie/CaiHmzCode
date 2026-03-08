@@ -32,16 +32,16 @@ export default function FeedbacksPage() {
     setLoading(true);
     try {
       const params: FeedbackListParams = {
-        page: currentPage - 1,
-        size: 10,
+        pageNum: currentPage,
+        pageSize: 10,
         keyword: keyword || undefined,
         isRead: readFilter,
       };
 
       const result: PageResult<Feedback> = await adminFeedbackService.getFeedbacks(params);
-      setFeedbacks(result.content || []);
-      setTotalPages(result.totalPages || 1);
-      setTotalElements(result.totalElements || 0);
+      setFeedbacks(result.list || []);
+      setTotalPages(result.pages || 1);
+      setTotalElements(result.total || 0);
       setSelectedIds([]); // 重置选中
     } catch {
       showError('加载反馈列表失败');
