@@ -4,6 +4,7 @@ import { useState } from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import clsx from 'clsx';
+import ThemeToggle from './ThemeToggle';
 
 /**
  * 导航链接配置
@@ -54,7 +55,7 @@ export default function Navbar() {
   };
 
   return (
-    <header className="fixed top-0 left-0 right-0 z-50 bg-white/95 backdrop-blur-sm shadow-sm">
+    <header className="fixed top-0 left-0 right-0 z-50 bg-white/95 dark:bg-dark-900/95 backdrop-blur-sm shadow-sm dark:shadow-dark-800/50 transition-colors">
       <nav data-testid="main-nav" className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between items-center h-16">
           {/* Logo */}
@@ -80,8 +81,8 @@ export default function Navbar() {
                 className={clsx(
                   'px-4 py-2 rounded-lg text-sm font-medium transition-all duration-200',
                   isActiveLink(link.href)
-                    ? 'text-primary-600 bg-primary-50'
-                    : 'text-secondary-600 hover:text-primary-600 hover:bg-primary-50/50'
+                    ? 'text-primary-600 bg-primary-50 dark:bg-primary-900/30 dark:text-primary-400'
+                    : 'text-secondary-600 dark:text-dark-300 hover:text-primary-600 hover:bg-primary-50/50 dark:hover:bg-dark-700 dark:hover:text-primary-400'
                 )}
               >
                 {link.label}
@@ -89,12 +90,18 @@ export default function Navbar() {
             ))}
 
             {/* 分隔线 */}
-            <div className="w-px h-6 bg-secondary-200 mx-2" />
+            <div className="w-px h-6 bg-secondary-200 dark:bg-dark-600 mx-2" />
+
+            {/* 主题切换按钮 */}
+            <ThemeToggle />
+
+            {/* 分隔线 */}
+            <div className="w-px h-6 bg-secondary-200 dark:bg-dark-600 mx-2" />
 
             {/* 管理后台入口 */}
             <Link
               href="/admin"
-              className="px-4 py-2 rounded-lg text-sm font-medium text-secondary-600 hover:text-primary-600 hover:bg-primary-50/50 transition-all duration-200"
+              className="px-4 py-2 rounded-lg text-sm font-medium text-secondary-600 dark:text-dark-300 hover:text-primary-600 hover:bg-primary-50/50 dark:hover:bg-dark-700 dark:hover:text-primary-400 transition-all duration-200"
             >
               管理后台
             </Link>
@@ -102,10 +109,13 @@ export default function Navbar() {
 
           {/* 移动端菜单按钮 */}
           <div className="flex items-center gap-2 md:hidden">
+            {/* 主题切换按钮 - 移动端 */}
+            <ThemeToggle />
+
             {/* 管理后台入口 - 移动端 */}
             <Link
               href="/admin"
-              className="p-2 text-secondary-600 hover:text-primary-600 transition-colors"
+              className="p-2 text-secondary-600 dark:text-dark-300 hover:text-primary-600 dark:hover:text-primary-400 transition-colors"
             >
               <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path
@@ -126,7 +136,7 @@ export default function Navbar() {
             {/* 汉堡菜单按钮 */}
             <button
               onClick={toggleMobileMenu}
-              className="p-2 text-secondary-600 hover:text-primary-600 transition-colors"
+              className="p-2 text-secondary-600 dark:text-dark-300 hover:text-primary-600 dark:hover:text-primary-400 transition-colors"
               aria-label={isMobileMenuOpen ? '关闭菜单' : '打开菜单'}
               aria-expanded={isMobileMenuOpen}
             >
@@ -169,8 +179,8 @@ export default function Navbar() {
                 className={clsx(
                   'px-4 py-3 rounded-lg text-sm font-medium transition-all duration-200',
                   isActiveLink(link.href)
-                    ? 'text-primary-600 bg-primary-50'
-                    : 'text-secondary-600 hover:text-primary-600 hover:bg-primary-50/50'
+                    ? 'text-primary-600 bg-primary-50 dark:bg-primary-900/30 dark:text-primary-400'
+                    : 'text-secondary-600 dark:text-dark-300 hover:text-primary-600 hover:bg-primary-50/50 dark:hover:bg-dark-700 dark:hover:text-primary-400'
                 )}
               >
                 {link.label}
