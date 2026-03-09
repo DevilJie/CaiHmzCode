@@ -120,11 +120,25 @@ public class SystemConfigService {
      */
     @Transactional(rollbackFor = Exception.class)
     public SystemConfigResponse updateSystemConfigs(SystemConfigRequest request) {
-        // 更新各项配置
+        // 更新基础配置
         updateConfigValue(KEY_SITE_NAME, request.getSiteName());
         updateConfigValue(KEY_ICP_NUMBER, request.getIcpNumber());
         updateConfigValue(KEY_FOOTER_TEXT, request.getFooterText());
         updateConfigValue(KEY_GITHUB_TOKEN, request.getGithubToken());
+
+        // 更新Logo配置
+        updateConfigValue(KEY_LOGO_TYPE, request.getLogoType());
+        updateConfigValue(KEY_LOGO_IMAGE_URL, request.getLogoImageUrl());
+
+        // 更新功能开关配置
+        updateBooleanConfigValue(KEY_DONATION_ENABLED, request.getDonationEnabled());
+
+        // 更新导航配置
+        updateBooleanConfigValue(KEY_NAV_HOME_ENABLED, request.getNavHomeEnabled());
+        updateBooleanConfigValue(KEY_NAV_PROJECTS_ENABLED, request.getNavProjectsEnabled());
+        updateBooleanConfigValue(KEY_NAV_BLOGS_ENABLED, request.getNavBlogsEnabled());
+        updateBooleanConfigValue(KEY_NAV_FEEDBACK_ENABLED, request.getNavFeedbackEnabled());
+        updateBooleanConfigValue(KEY_NAV_DONATION_ENABLED, request.getNavDonationEnabled());
 
         log.info("系统配置更新成功");
 
@@ -188,6 +202,17 @@ public class SystemConfigService {
                 .eq(SystemConfig::getConfigKey, key)
                 .set(SystemConfig::getConfigValue, value)
         );
+    }
+
+    /**
+     * 更新布尔类型配置值
+     *
+     * @param key   配置键
+     * @param value 布尔值
+     */
+    private void updateBooleanConfigValue(String key, Boolean value) {
+        String strValue = (value != null) ? String.valueOf(value) : "false";
+        updateConfigValue(key, strValue);
     }
 
 }
