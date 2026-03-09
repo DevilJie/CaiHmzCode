@@ -75,10 +75,18 @@ export default function Navbar() {
 
   /**
    * 根据navConfig动态生成导航链接
+   * 打赏导航需要额外检查donationEnabled
    */
   const getNavLinks = () => {
     return Object.entries(NAV_LINK_MAP)
-      .filter(([key]) => siteInfo.navConfig[key as keyof NavConfig])
+      .filter(([key]) => {
+        const enabled = siteInfo.navConfig[key as keyof NavConfig];
+        // 打赏导航需要额外检查donationEnabled
+        if (key === 'donation') {
+          return enabled && siteInfo.donationEnabled;
+        }
+        return enabled;
+      })
       .map(([key, value]) => ({
         ...value,
         key,
