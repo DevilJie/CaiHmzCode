@@ -114,15 +114,12 @@ export default function BlogList() {
   };
 
   return (
-    <div className="p-6">
-      {/* 页面标题 */}
-      <div className="flex items-center justify-between mb-6">
-        <div>
-          <h1 className="text-xl font-bold text-secondary-800">博客管理</h1>
-          <p className="text-sm text-secondary-500 mt-1">
-            共 {totalElements} 篇博客
-          </p>
-        </div>
+    <div className="p-6 pt-0">
+      {/* 页面副标题和新建按钮 */}
+      <div className="flex items-center justify-between mb-6 pt-4">
+        <p className="text-sm text-secondary-500">
+          共 {totalElements} 篇博客
+        </p>
         <Link
           href="/admin/blogs/edit/new"
           className="inline-flex items-center px-4 py-2 bg-primary-500 text-white text-sm font-medium rounded-lg hover:bg-primary-600 transition-colors"
