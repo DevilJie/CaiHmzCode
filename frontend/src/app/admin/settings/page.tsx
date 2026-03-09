@@ -22,6 +22,14 @@ export default function SettingsPage() {
     icpNumber: '',
     footerText: '',
     githubToken: '',
+    logoType: 'text',
+    logoImageUrl: '',
+    donationEnabled: false,
+    navHomeEnabled: true,
+    navProjectsEnabled: true,
+    navBlogsEnabled: true,
+    navFeedbackEnabled: true,
+    navDonationEnabled: true,
   });
 
   // 加载配置
@@ -39,9 +47,17 @@ export default function SettingsPage() {
         icpNumber: data.icpNumber || '',
         footerText: data.footerText || '',
         githubToken: data.githubToken || '',
+        logoType: data.logoType || 'text',
+        logoImageUrl: data.logoImageUrl || '',
+        donationEnabled: data.donationEnabled ?? false,
+        navHomeEnabled: data.navHomeEnabled ?? true,
+        navProjectsEnabled: data.navProjectsEnabled ?? true,
+        navBlogsEnabled: data.navBlogsEnabled ?? true,
+        navFeedbackEnabled: data.navFeedbackEnabled ?? true,
+        navDonationEnabled: data.navDonationEnabled ?? true,
       });
     } catch (error) {
-      showToast('加载配置失败', 'error');
+      showToast('error', '加载配置失败');
       console.error(error);
     } finally {
       setLoading(false);
@@ -52,17 +68,17 @@ export default function SettingsPage() {
     e.preventDefault();
 
     if (!formData.siteName.trim()) {
-      showToast('网站名称不能为空', 'error');
+      showToast('error', '网站名称不能为空');
       return;
     }
 
     try {
       setSaving(true);
       await systemConfigService.updateSystemConfigs(formData);
-      showToast('配置保存成功', 'success');
+      showToast('success', '配置保存成功');
       loadConfig();
     } catch (error) {
-      showToast('保存配置失败', 'error');
+      showToast('error', '保存配置失败');
       console.error(error);
     } finally {
       setSaving(false);
@@ -172,6 +188,252 @@ export default function SettingsPage() {
                   用于同步GitHub项目README内容，需要repo权限
                 </p>
               </div>
+            </div>
+          </div>
+
+          {/* Logo配置 */}
+          <div className="rounded-lg bg-white p-6 shadow-card">
+            <h2 className="mb-4 text-lg font-semibold text-secondary-800">
+              Logo配置
+            </h2>
+            <div className="space-y-4">
+              <div>
+                <label className="mb-2 block text-sm font-medium text-secondary-700">
+                  Logo类型
+                </label>
+                <div className="flex gap-4">
+                  <label className="flex cursor-pointer items-center">
+                    <input
+                      type="radio"
+                      name="logoType"
+                      value="text"
+                      checked={formData.logoType === 'text'}
+                      onChange={(e) =>
+                        setFormData({ ...formData, logoType: e.target.value as 'text' | 'image' })
+                      }
+                      className="h-4 w-4 border-secondary-300 text-primary-600 focus:ring-primary-500"
+                    />
+                    <span className="ml-2 text-sm text-secondary-700">文字Logo</span>
+                  </label>
+                  <label className="flex cursor-pointer items-center">
+                    <input
+                      type="radio"
+                      name="logoType"
+                      value="image"
+                      checked={formData.logoType === 'image'}
+                      onChange={(e) =>
+                        setFormData({ ...formData, logoType: e.target.value as 'text' | 'image' })
+                      }
+                      className="h-4 w-4 border-secondary-300 text-primary-600 focus:ring-primary-500"
+                    />
+                    <span className="ml-2 text-sm text-secondary-700">图片Logo</span>
+                  </label>
+                </div>
+                <p className="mt-1 text-xs text-secondary-500">
+                  选择文字Logo将显示网站名称，选择图片Logo将显示自定义图片
+                </p>
+              </div>
+
+              {formData.logoType === 'image' && (
+                <div>
+                  <label className="mb-1 block text-sm font-medium text-secondary-700">
+                    Logo图片URL
+                  </label>
+                  <input
+                    type="text"
+                    value={formData.logoImageUrl}
+                    onChange={(e) =>
+                      setFormData({ ...formData, logoImageUrl: e.target.value })
+                    }
+                    className="w-full rounded-lg border border-secondary-300 px-4 py-2 focus:border-primary-500 focus:outline-none focus:ring-1 focus:ring-primary-500"
+                    placeholder="请输入Logo图片的URL地址"
+                  />
+                  <p className="mt-1 text-xs text-secondary-500">
+                    支持jpg、png、svg等格式，建议使用透明背景图片
+                  </p>
+                  {formData.logoImageUrl && (
+                    <div className="mt-3">
+                      <p className="mb-1 text-xs text-secondary-500">预览：</p>
+                      <img
+                        src={formData.logoImageUrl}
+                        alt="Logo预览"
+                        className="h-12 max-w-xs rounded border border-secondary-200 bg-white p-1"
+                        onError={(e) => {
+                          e.currentTarget.style.display = 'none';
+                        }}
+                      />
+                    </div>
+                  )}
+                </div>
+              )}
+            </div>
+          </div>
+
+          {/* 导航配置 */}
+          <div className="rounded-lg bg-white p-6 shadow-card">
+            <h2 className="mb-4 text-lg font-semibold text-secondary-800">
+              导航配置
+            </h2>
+            <p className="mb-4 text-sm text-secondary-500">
+              控制前台页面导航栏中各菜单项的显示与隐藏
+            </p>
+            <div className="space-y-4">
+              {/* 首页开关 */}
+              <div className="flex items-center justify-between rounded-lg border border-secondary-200 p-3">
+                <div>
+                  <span className="font-medium text-secondary-800">首页</span>
+                  <p className="text-xs text-secondary-500">显示首页导航链接</p>
+                </div>
+                <button
+                  type="button"
+                  onClick={() =>
+                    setFormData({ ...formData, navHomeEnabled: !formData.navHomeEnabled })
+                  }
+                  className={clsx(
+                    'relative inline-flex h-6 w-11 flex-shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-none focus:ring-2 focus:ring-primary-500 focus:ring-offset-2',
+                    formData.navHomeEnabled ? 'bg-primary-600' : 'bg-secondary-300'
+                  )}
+                >
+                  <span
+                    className={clsx(
+                      'pointer-events-none inline-block h-5 w-5 transform rounded-full bg-white shadow ring-0 transition duration-200 ease-in-out',
+                      formData.navHomeEnabled ? 'translate-x-5' : 'translate-x-0'
+                    )}
+                  />
+                </button>
+              </div>
+
+              {/* 项目开关 */}
+              <div className="flex items-center justify-between rounded-lg border border-secondary-200 p-3">
+                <div>
+                  <span className="font-medium text-secondary-800">项目</span>
+                  <p className="text-xs text-secondary-500">显示项目导航链接</p>
+                </div>
+                <button
+                  type="button"
+                  onClick={() =>
+                    setFormData({ ...formData, navProjectsEnabled: !formData.navProjectsEnabled })
+                  }
+                  className={clsx(
+                    'relative inline-flex h-6 w-11 flex-shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-none focus:ring-2 focus:ring-primary-500 focus:ring-offset-2',
+                    formData.navProjectsEnabled ? 'bg-primary-600' : 'bg-secondary-300'
+                  )}
+                >
+                  <span
+                    className={clsx(
+                      'pointer-events-none inline-block h-5 w-5 transform rounded-full bg-white shadow ring-0 transition duration-200 ease-in-out',
+                      formData.navProjectsEnabled ? 'translate-x-5' : 'translate-x-0'
+                    )}
+                  />
+                </button>
+              </div>
+
+              {/* 博客开关 */}
+              <div className="flex items-center justify-between rounded-lg border border-secondary-200 p-3">
+                <div>
+                  <span className="font-medium text-secondary-800">博客</span>
+                  <p className="text-xs text-secondary-500">显示博客导航链接</p>
+                </div>
+                <button
+                  type="button"
+                  onClick={() =>
+                    setFormData({ ...formData, navBlogsEnabled: !formData.navBlogsEnabled })
+                  }
+                  className={clsx(
+                    'relative inline-flex h-6 w-11 flex-shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-none focus:ring-2 focus:ring-primary-500 focus:ring-offset-2',
+                    formData.navBlogsEnabled ? 'bg-primary-600' : 'bg-secondary-300'
+                  )}
+                >
+                  <span
+                    className={clsx(
+                      'pointer-events-none inline-block h-5 w-5 transform rounded-full bg-white shadow ring-0 transition duration-200 ease-in-out',
+                      formData.navBlogsEnabled ? 'translate-x-5' : 'translate-x-0'
+                    )}
+                  />
+                </button>
+              </div>
+
+              {/* 反馈开关 */}
+              <div className="flex items-center justify-between rounded-lg border border-secondary-200 p-3">
+                <div>
+                  <span className="font-medium text-secondary-800">反馈</span>
+                  <p className="text-xs text-secondary-500">显示反馈导航链接</p>
+                </div>
+                <button
+                  type="button"
+                  onClick={() =>
+                    setFormData({ ...formData, navFeedbackEnabled: !formData.navFeedbackEnabled })
+                  }
+                  className={clsx(
+                    'relative inline-flex h-6 w-11 flex-shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-none focus:ring-2 focus:ring-primary-500 focus:ring-offset-2',
+                    formData.navFeedbackEnabled ? 'bg-primary-600' : 'bg-secondary-300'
+                  )}
+                >
+                  <span
+                    className={clsx(
+                      'pointer-events-none inline-block h-5 w-5 transform rounded-full bg-white shadow ring-0 transition duration-200 ease-in-out',
+                      formData.navFeedbackEnabled ? 'translate-x-5' : 'translate-x-0'
+                    )}
+                  />
+                </button>
+              </div>
+
+              {/* 打赏导航开关 */}
+              <div className="flex items-center justify-between rounded-lg border border-secondary-200 p-3">
+                <div>
+                  <span className="font-medium text-secondary-800">打赏</span>
+                  <p className="text-xs text-secondary-500">显示打赏导航链接</p>
+                </div>
+                <button
+                  type="button"
+                  onClick={() =>
+                    setFormData({ ...formData, navDonationEnabled: !formData.navDonationEnabled })
+                  }
+                  className={clsx(
+                    'relative inline-flex h-6 w-11 flex-shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-none focus:ring-2 focus:ring-primary-500 focus:ring-offset-2',
+                    formData.navDonationEnabled ? 'bg-primary-600' : 'bg-secondary-300'
+                  )}
+                >
+                  <span
+                    className={clsx(
+                      'pointer-events-none inline-block h-5 w-5 transform rounded-full bg-white shadow ring-0 transition duration-200 ease-in-out',
+                      formData.navDonationEnabled ? 'translate-x-5' : 'translate-x-0'
+                    )}
+                  />
+                </button>
+              </div>
+            </div>
+          </div>
+
+          {/* 打赏功能配置 */}
+          <div className="rounded-lg bg-white p-6 shadow-card">
+            <h2 className="mb-4 text-lg font-semibold text-secondary-800">
+              打赏功能
+            </h2>
+            <div className="flex items-center justify-between rounded-lg border border-secondary-200 p-3">
+              <div>
+                <span className="font-medium text-secondary-800">启用打赏功能</span>
+                <p className="text-xs text-secondary-500">
+                  开启后，用户可以在打赏页面查看收款码并进行打赏
+                </p>
+              </div>
+              <button
+                type="button"
+                onClick={() =>
+                  setFormData({ ...formData, donationEnabled: !formData.donationEnabled })
+                }
+                className={clsx(
+                  'relative inline-flex h-6 w-11 flex-shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-none focus:ring-2 focus:ring-primary-500 focus:ring-offset-2',
+                  formData.donationEnabled ? 'bg-primary-600' : 'bg-secondary-300'
+                )}
+              >
+                <span
+                  className={clsx(
+                    'pointer-events-none inline-block h-5 w-5 transform rounded-full bg-white shadow ring-0 transition duration-200 ease-in-out',
+                    formData.donationEnabled ? 'translate-x-5' : 'translate-x-0'
+                  )}
+                />
+              </button>
             </div>
           </div>
 
