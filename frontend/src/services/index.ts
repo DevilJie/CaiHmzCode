@@ -8,6 +8,7 @@ export type { BlogListParams } from './blog';
 export { advertisementService } from './advertisement';
 export type { AdListParams, AdRequest } from './advertisement';
 export { feedbackService } from './feedback';
+export { systemService } from './system';
 
 // 管理端服务
 export { adminProjectService } from './admin/project';
