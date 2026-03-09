@@ -121,8 +121,8 @@ export default function AdminLayout({ children }: AdminLayoutProps) {
         )}
       >
         <div className="p-4 lg:p-6">
-          {/* 卡片式内容容器 */}
-          <div className="mx-auto max-w-7xl">
+          {/* 卡片式内容容器 - 100%宽度适配大屏 */}
+          <div className="w-full">
             <div className="rounded-lg bg-white shadow-card">{children}</div>
           </div>
         </div>
