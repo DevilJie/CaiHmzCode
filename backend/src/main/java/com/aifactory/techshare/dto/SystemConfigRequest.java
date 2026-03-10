@@ -47,11 +47,6 @@ public class SystemConfigRequest implements Serializable {
     private String logoImageUrl;
 
     /**
-     * 是否启用捐赠功能
-     */
-    private Boolean donationEnabled;
-
-    /**
      * 是否显示首页导航
      */
     private Boolean navHomeEnabled;

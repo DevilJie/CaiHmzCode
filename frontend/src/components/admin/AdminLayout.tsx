@@ -84,7 +84,7 @@ export default function AdminLayout({ children }: AdminLayoutProps) {
   }
 
   return (
-    <div className="min-h-screen bg-secondary-100">
+    <div className="admin-layout min-h-screen bg-secondary-100">
       {/* 移动端遮罩层 */}
       {mobileSidebarOpen && (
         <div

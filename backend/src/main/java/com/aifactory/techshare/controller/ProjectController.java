@@ -23,6 +23,8 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.List;
+
 /**
  * 用户端项目控制器
  *
@@ -88,6 +90,20 @@ public class ProjectController {
         log.info("增加项目浏览次数: id={}", id);
         projectService.incrementViewCount(id);
         return Result.success();
+    }
+
+    /**
+     * 获取所有技术栈列表
+     *
+     * @return 技术栈列表
+     */
+    @GetMapping("/tech-stacks")
+    @Operation(summary = "获取技术栈列表", description = "获取所有项目使用的技术栈列表（去重）")
+    @ApiResponse(responseCode = "200", description = "查询成功")
+    public Result<List<String>> getTechStacks() {
+        log.info("查询技术栈列表");
+        List<String> techStacks = projectService.getAllTechStacks();
+        return Result.success(techStacks);
     }
 
 }

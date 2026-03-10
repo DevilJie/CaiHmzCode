@@ -76,7 +76,6 @@ public class SystemConfigService {
                 .footerText(getConfigValue(KEY_FOOTER_TEXT))
                 .logoType(getConfigValue(KEY_LOGO_TYPE, "text"))
                 .logoImageUrl(getConfigValue(KEY_LOGO_IMAGE_URL))
-                .donationEnabled(getBooleanConfigValue(KEY_DONATION_ENABLED, false))
                 .navConfig(navConfig)
                 .build();
     }
@@ -129,9 +128,6 @@ public class SystemConfigService {
         // 更新Logo配置
         updateConfigValue(KEY_LOGO_TYPE, request.getLogoType());
         updateConfigValue(KEY_LOGO_IMAGE_URL, request.getLogoImageUrl());
-
-        // 更新功能开关配置
-        updateBooleanConfigValue(KEY_DONATION_ENABLED, request.getDonationEnabled());
 
         // 更新导航配置
         updateBooleanConfigValue(KEY_NAV_HOME_ENABLED, request.getNavHomeEnabled());

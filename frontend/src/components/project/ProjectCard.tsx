@@ -22,10 +22,10 @@ export default function ProjectCard({ project }: ProjectCardProps) {
     <Link
       href={`/projects/${id}`}
       data-testid="project-card"
-      className="group block bg-white rounded-xl shadow-card overflow-hidden hover:shadow-lg transition-all duration-300 hover:-translate-y-1"
+      className="group block bg-white dark:bg-dark-800 rounded-xl shadow-card dark:shadow-dark-900/30 overflow-hidden hover:shadow-lg dark:hover:shadow-dark-900/50 transition-all duration-300 hover:-translate-y-1"
     >
       {/* 封面图 */}
-      <div className="relative aspect-video overflow-hidden bg-secondary-100">
+      <div className="relative aspect-video overflow-hidden bg-secondary-100 dark:bg-dark-700">
         {coverImage ? (
           <Image
             src={coverImage}
@@ -35,9 +35,9 @@ export default function ProjectCard({ project }: ProjectCardProps) {
             sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 25vw"
           />
         ) : (
-          <div className="absolute inset-0 flex items-center justify-center">
+          <div className="absolute inset-0 flex items-center justify-center bg-secondary-100 dark:bg-dark-700">
             <svg
-              className="w-16 h-16 text-secondary-300"
+              className="w-16 h-16 text-secondary-300 dark:text-dark-500"
               fill="none"
               stroke="currentColor"
               viewBox="0 0 24 24"
@@ -56,12 +56,12 @@ export default function ProjectCard({ project }: ProjectCardProps) {
       {/* 内容区域 */}
       <div className="p-4">
         {/* 项目名称 */}
-        <h3 className="font-semibold text-lg text-secondary-900 mb-2 group-hover:text-primary-600 transition-colors line-clamp-1">
+        <h3 className="font-semibold text-lg text-secondary-900 dark:text-dark-100 mb-2 group-hover:text-primary-600 dark:group-hover:text-primary-400 transition-colors line-clamp-1">
           {name}
         </h3>
 
         {/* 项目简介 */}
-        <p className="text-secondary-500 text-sm mb-3 line-clamp-2 leading-relaxed">
+        <p className="text-secondary-500 dark:text-dark-400 text-sm mb-3 line-clamp-2 leading-relaxed">
           {description || '暂无简介'}
         </p>
 
@@ -71,13 +71,13 @@ export default function ProjectCard({ project }: ProjectCardProps) {
             {techTags.slice(0, 3).map((tag) => (
               <span
                 key={tag}
-                className="px-2 py-0.5 bg-primary-50 text-primary-600 text-xs rounded-full"
+                className="px-2 py-0.5 bg-primary-50 dark:bg-primary-900/30 text-primary-600 dark:text-primary-400 text-xs rounded-full"
               >
                 {tag}
               </span>
             ))}
             {techTags.length > 3 && (
-              <span className="px-2 py-0.5 bg-secondary-100 text-secondary-500 text-xs rounded-full">
+              <span className="px-2 py-0.5 bg-secondary-100 dark:bg-dark-700 text-secondary-500 dark:text-dark-400 text-xs rounded-full">
                 +{techTags.length - 3}
               </span>
             )}
@@ -85,7 +85,7 @@ export default function ProjectCard({ project }: ProjectCardProps) {
         )}
 
         {/* 底部信息 */}
-        <div className="flex items-center justify-between text-secondary-400 text-xs">
+        <div className="flex items-center justify-between text-secondary-400 dark:text-dark-500 text-xs">
           <div className="flex items-center gap-1">
             <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path
@@ -103,7 +103,7 @@ export default function ProjectCard({ project }: ProjectCardProps) {
             </svg>
             <span>{viewCount || 0} 次浏览</span>
           </div>
-          <span className="text-primary-500 group-hover:translate-x-1 transition-transform">
+          <span className="text-primary-500 dark:text-primary-400 group-hover:translate-x-1 transition-transform">
             查看详情
           </span>
         </div>

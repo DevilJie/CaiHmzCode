@@ -238,7 +238,6 @@ export interface SiteInfo {
   footerText: string;
   logoType: 'text' | 'image';
   logoImageUrl: string;
-  donationEnabled: boolean;
   navConfig: NavConfig;
 }
 
@@ -254,7 +253,6 @@ export interface SystemConfigResponse {
   githubToken: string;
   logoType?: 'text' | 'image';
   logoImageUrl?: string;
-  donationEnabled?: boolean;
   navHomeEnabled?: boolean;
   navProjectsEnabled?: boolean;
   navBlogsEnabled?: boolean;
@@ -273,7 +271,6 @@ export interface SystemConfigRequest {
   githubToken?: string;
   logoType?: 'text' | 'image';
   logoImageUrl?: string;
-  donationEnabled?: boolean;
   navHomeEnabled?: boolean;
   navProjectsEnabled?: boolean;
   navBlogsEnabled?: boolean;

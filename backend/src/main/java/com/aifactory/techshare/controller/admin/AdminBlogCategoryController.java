@@ -4,6 +4,7 @@ import com.aifactory.techshare.common.PageResult;
 import com.aifactory.techshare.common.Result;
 import com.aifactory.techshare.dto.CategoryRequest;
 import com.aifactory.techshare.dto.CategoryResponse;
+import com.aifactory.techshare.dto.CategoryTreeResponse;
 import com.aifactory.techshare.service.BlogCategoryService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -79,6 +80,36 @@ public class AdminBlogCategoryController {
         log.info("管理端获取所有分类");
         List<CategoryResponse> categories = categoryService.getAllCategories();
         return Result.success(categories);
+    }
+
+    /**
+     * 获取分类树
+     * 返回完整的分类树形结构，包含多级嵌套
+     *
+     * @return 分类树列表
+     */
+    @GetMapping("/tree")
+    @Operation(summary = "获取分类树", description = "获取完整的分类树形结构，包含多级嵌套")
+    @ApiResponse(responseCode = "200", description = "查询成功")
+    public Result<List<CategoryTreeResponse>> getCategoryTree() {
+        log.info("管理端获取分类树");
+        List<CategoryTreeResponse> tree = categoryService.getCategoryTree();
+        return Result.success(tree);
+    }
+
+    /**
+     * 获取末级分类
+     * 末级分类是指没有子分类的分类，通常用于文章关联选择
+     *
+     * @return 末级分类列表
+     */
+    @GetMapping("/leaves")
+    @Operation(summary = "获取末级分类", description = "获取所有末级分类（没有子分类的分类），用于文章关联选择")
+    @ApiResponse(responseCode = "200", description = "查询成功")
+    public Result<List<CategoryResponse>> getLeafCategories() {
+        log.info("管理端获取末级分类");
+        List<CategoryResponse> leaves = categoryService.getLeafCategories();
+        return Result.success(leaves);
     }
 
     /**

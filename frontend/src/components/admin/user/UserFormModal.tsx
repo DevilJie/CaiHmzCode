@@ -97,7 +97,7 @@ export default function UserFormModal({ user, onClose, onSuccess }: UserFormModa
           password: formData.password || undefined,
         };
         await adminUserService.updateUser(user.id, updateData);
-        showToast('更新用户成功', 'success');
+        showToast('success', '更新用户成功');
       } else {
         const createData: UserCreateRequest = {
           username: formData.username,
@@ -108,13 +108,13 @@ export default function UserFormModal({ user, onClose, onSuccess }: UserFormModa
           role: formData.role,
         };
         await adminUserService.createUser(createData);
-        showToast('创建用户成功', 'success');
+        showToast('success', '创建用户成功');
       }
 
       onSuccess();
     } catch (error: unknown) {
       const errorMessage = error instanceof Error ? error.message : '操作失败';
-      showToast(errorMessage, 'error');
+      showToast('error', errorMessage);
     } finally {
       setSaving(false);
     }

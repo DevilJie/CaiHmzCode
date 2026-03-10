@@ -9,7 +9,7 @@ export const projectService = {
   /**
    * 获取项目列表（分页）
    */
-  async getProjects(params?: PageParams): Promise<PageResult<Project>> {
+  async getProjects(params?: PageParams & { tech?: string }): Promise<PageResult<Project>> {
     const response = (await apiClient.get('/projects', {
       params,
     })) as ApiResponse<PageResult<Project>>;
@@ -19,6 +19,19 @@ export const projectService = {
     }
 
     throw new Error(response.message || '获取项目列表失败');
+  },
+
+  /**
+   * 获取所有技术栈列表
+   */
+  async getTechStacks(): Promise<string[]> {
+    const response = (await apiClient.get('/projects/tech-stacks')) as ApiResponse<string[]>;
+
+    if (response.code === 200 && response.data) {
+      return response.data;
+    }
+
+    return [];
   },
 
   /**

@@ -610,6 +610,26 @@ public class ProjectService {
     }
 
     /**
+     * 获取所有技术栈列表（去重）
+     *
+     * @return 技术栈列表
+     */
+    @Cacheable(value = "tech-stacks")
+    public List<String> getAllTechStacks() {
+        List<Project> projects = projectMapper.selectList(
+                new LambdaQueryWrapper<Project>()
+                        .eq(Project::getIsShow, 1)
+                        .isNotNull(Project::getTechTags)
+        );
+
+        return projects.stream()
+                .flatMap(project -> convertJsonToTechTags(project.getTechTags()).stream())
+                .distinct()
+                .sorted()
+                .toList();
+    }
+
+    /**
      * 同步所有项目的README（由定时任务调用）
      */
     @Transactional

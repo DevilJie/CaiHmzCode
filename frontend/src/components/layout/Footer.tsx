@@ -1,36 +1,15 @@
 'use client';
 
 import { useQuery } from '@tanstack/react-query';
-import axios from 'axios';
-
-/**
- * 网站信息接口
- */
-interface SiteInfo {
-  siteName: string;
-  icpNumber: string;
-  footerText: string;
-}
-
-/**
- * 获取网站信息
- */
-const fetchSiteInfo = async (): Promise<SiteInfo | null> => {
-  try {
-    const response = await axios.get('/api/public/site-info');
-    return response.data.data;
-  } catch {
-    // 如果API未实现，返回默认值
-    return null;
-  }
-};
+import { systemService } from '@/services/system';
 
 /**
  * Footer页脚组件
+ * Editorial Magazine 风格
  *
  * 功能:
  * - 显示网站信息
- * - 显示ICP备案号（从API获取）
+ * - 显示ICP备案号（从系统配置获取）
  * - 显示版权信息
  */
 export default function Footer() {
@@ -39,7 +18,7 @@ export default function Footer() {
   // 获取网站信息
   const { data: siteInfo } = useQuery({
     queryKey: ['siteInfo'],
-    queryFn: fetchSiteInfo,
+    queryFn: () => systemService.getSiteInfo(),
     staleTime: 10 * 60 * 1000, // 10分钟缓存
     retry: false,
   });

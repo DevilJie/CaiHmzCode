@@ -10,8 +10,9 @@ import {
   adminCategoryService,
   adminTagService,
   BlogRequest,
+  CategoryTreeNode,
 } from '@/services/admin/blog';
-import { Blog, BlogCategory, BlogTag } from '@/types';
+import { Blog, BlogTag } from '@/types';
 
 /**
  * 博客表单 Props
@@ -43,7 +44,7 @@ export default function BlogForm({ blogId, initialData }: BlogFormProps) {
   const [videoUrl, setVideoUrl] = useState(initialData?.videoUrl || '');
 
   // 选项数据
-  const [categories, setCategories] = useState<BlogCategory[]>([]);
+  const [categories, setCategories] = useState<CategoryTreeNode[]>([]);
   const [tags, setTags] = useState<BlogTag[]>([]);
 
   // UI状态
@@ -60,10 +61,21 @@ export default function BlogForm({ blogId, initialData }: BlogFormProps) {
     setLoading(true);
     try {
       const [categoriesData, tagsData] = await Promise.all([
-        adminCategoryService.getCategories(),
+        adminCategoryService.getCategoryTree(),
         adminTagService.getTags(),
       ]);
-      setCategories(categoriesData);
+      // 扁平化分类树，保留层级信息用于显示
+      const flattenTree = (nodes: CategoryTreeNode[], level = 0): CategoryTreeNode[] => {
+        const result: CategoryTreeNode[] = [];
+        nodes.forEach((node) => {
+          result.push({ ...node, level });
+          if (node.children && node.children.length > 0) {
+            result.push(...flattenTree(node.children, level + 1));
+          }
+        });
+        return result;
+      };
+      setCategories(flattenTree(categoriesData || []));
       setTags(tagsData);
     } catch (error) {
       console.error('加载选项失败:', error);
@@ -189,9 +201,9 @@ export default function BlogForm({ blogId, initialData }: BlogFormProps) {
   };
 
   return (
-    <div className="flex flex-col h-full">
+    <div className="flex flex-col" style={{ height: 'calc(100vh - 120px)' }}>
       {/* 顶部标题栏 */}
-      <div className="flex items-center justify-between border-b border-secondary-200 p-4">
+      <div className="flex-shrink-0 flex items-center justify-between border-b border-secondary-200 p-4">
         <div className="flex items-center gap-4 flex-1">
           <input
             type="text"
@@ -241,13 +253,12 @@ export default function BlogForm({ blogId, initialData }: BlogFormProps) {
       {/* 主内容区 */}
       <div className="flex flex-1 overflow-hidden">
         {/* 左侧：编辑器 */}
-        <div className="flex-1 flex flex-col p-4 overflow-hidden">
+        <div className="flex-1 flex flex-col p-4 overflow-hidden min-h-0">
           <MarkdownEditor
             value={content}
             onChange={setContent}
             onAutoSave={handleAutoSave}
             autoSaveInterval={5000}
-            height="calc(100vh - 280px)"
             placeholder="请输入博客内容，支持 Markdown 格式..."
           />
         </div>
@@ -285,12 +296,16 @@ export default function BlogForm({ blogId, initialData }: BlogFormProps) {
               >
                 <option value={0}>请选择分类</option>
                 {categories.map((cat) => (
-                  <option key={cat.id} value={cat.id}>
+                  <option key={cat.id} value={cat.id} disabled={!cat.isLeaf}>
+                    {'　'.repeat(cat.level || 0)}
+                    {cat.level && cat.level > 0 ? '└ ' : ''}
                     {cat.name}
+                    {!cat.isLeaf ? ' (父级分类)' : ''}
                   </option>
                 ))}
               </select>
             )}
+            <p className="mt-1 text-xs text-secondary-400">只能选择末级分类关联博客</p>
           </div>
 
           {/* 标签 */}

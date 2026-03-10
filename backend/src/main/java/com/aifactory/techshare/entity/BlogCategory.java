@@ -32,6 +32,16 @@ public class BlogCategory implements Serializable {
     private String name;
 
     /**
+     * 父分类ID，顶级为NULL
+     */
+    private Long parentId;
+
+    /**
+     * 层级深度，顶级为0
+     */
+    private Integer level;
+
+    /**
      * 排序顺序
      */
     private Integer sortOrder;

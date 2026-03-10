@@ -1,5 +1,6 @@
 import apiClient from '@/lib/axios';
 import { ApiResponse, PageParams, PageResult, Blog, BlogCategory, BlogTag } from '@/types';
+import { CategoryTreeNode } from './admin/blog';
 
 /**
  * 博客列表请求参数
@@ -69,6 +70,21 @@ export const blogService = {
     }
 
     throw new Error(response.message || '获取分类列表失败');
+  },
+
+  /**
+   * 获取博客分类树
+   */
+  async getCategoryTree(): Promise<CategoryTreeNode[]> {
+    const response = (await apiClient.get(
+      '/blog-categories/tree'
+    )) as ApiResponse<CategoryTreeNode[]>;
+
+    if (response.code === 200 && response.data) {
+      return response.data;
+    }
+
+    throw new Error(response.message || '获取分类树失败');
   },
 
   /**
