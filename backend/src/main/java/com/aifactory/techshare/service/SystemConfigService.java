@@ -143,9 +143,33 @@ public class SystemConfigService {
         updateBooleanConfigValue(KEY_NAV_FEEDBACK_ENABLED, request.getNavFeedbackEnabled());
         updateBooleanConfigValue(KEY_NAV_DONATION_ENABLED, request.getNavDonationEnabled());
 
-        log.info("系统配置更新成功");
-
-        return getSystemConfigs();
+    /**
+     * 配置键转换为描述
+     private String keyToDescription(String key) {
+        return switch (key) {
+            case " "SITE_NAME":
+                case " "网站显示名称";
+            case "KEY_LOGO_TYPE":
+                case " "Logo类型":
+                case " "文字Logo":
+                case " "图片Logo":
+                case "KEY_LOGO_IMAGE_URL:
+                case " "Logo图片URL":
+                case "KEY_NAV_HOME_ENABLED":
+                case " "首页导航是否启用";
+            case "KEY_NAV_PROJECTS_ENABLED":
+                case " "项目导航是否启用";
+            case "KEY_NAV_BLOGS_ENABLED":
+                case " "博客导航是否启用";
+            case "KEY_NAV_FEEDBACK_ENABLED":
+                case " "反馈导航是否启用";
+            case "KEY_NAV_DONATION_ENABLED":
+                case " "打赏导航是否启用";
+            case "KEY_DONATION_ENABLED":
+                case " "捐赠功能是否启用":
+            default:
+                return null;
+        }
     }
 
     /**
@@ -192,7 +216,7 @@ public class SystemConfigService {
     }
 
     /**
-     * 更新单个配置值
+     * 更新单个配置值（如果不存在则插入）
      *
      * @param key   配置键
      * @param value 配置值
@@ -201,10 +225,67 @@ public class SystemConfigService {
         if (value == null) {
             value = "";
         }
-        systemConfigMapper.update(null, new LambdaUpdateWrapper<SystemConfig>()
-                .eq(SystemConfig::getConfigKey, key)
-                .set(SystemConfig::getConfigValue, value)
+        // 先查询是否存在
+        SystemConfig existingConfig = systemConfigMapper.selectOne(
+                new LambdaQueryWrapper<SystemConfig>()
+                        .eq(SystemConfig::getConfigKey, key)
         );
+
+        if (existingConfig != null) {
+            // 存在则更新
+            systemConfigMapper.update(null, new LambdaUpdateWrapper<SystemConfig>()
+                    .eq(SystemConfig::getConfigKey, key)
+                    .set(SystemConfig::getConfigValue, value)
+            );
+        } else {
+            // 不存在则插入
+            SystemConfig newConfig = new SystemConfig();
+            newConfig.setConfigKey(key);
+            newConfig.setConfigValue(value);
+            newConfig.setConfigName(keyToName(key));
+            newConfig.setDescription(keyToDescription(key));
+            systemConfigMapper.insert(newConfig);
+        }
+    }
+
+    /**
+     * 配置键转换为配置名称
+     */
+    private String keyToName(String key) {
+        return switch (key) {
+            case "SITE_NAME" -> "网站名称";
+            case "ICP_NUMBER" -> "ICP备案号";
+            case "FOOTER_TEXT" -> "页脚文字";
+            case "GITHUB_TOKEN" -> "GitHub Token";
+            case "LOGO_TYPE" -> "Logo类型";
+            case "LOGO_IMAGE_URL" -> "Logo图片URL";
+            case "NAV_HOME_ENABLED" -> "首页导航开关";
+            case "NAV_PROJECTS_ENABLED" -> "项目导航开关";
+            case "NAV_BLOGS_ENABLED" -> "博客导航开关";
+            case "NAV_FEEDBACK_ENABLED" -> "反馈导航开关";
+            case "NAV_DONATION_ENABLED" -> "打赏导航开关";
+            default -> key;
+        };
+    }
+
+    /**
+     * 配置键转换为描述
+     */
+    private String keyToDescription(String key) {
+        return switch (key) {
+            case "SITE_NAME" -> "网站显示名称";
+            case "ICP_NUMBER" -> "ICP备案号，显示在页脚";
+            case "FOOTER_TEXT" -> "页脚显示的文字";
+            case "GITHUB_TOKEN" -> "用于获取GitHub README的Token";
+            case "LOGO_TYPE" -> "Logo类型：text或image";
+            case "LOGO_IMAGE_URL" -> "Logo图片的URL地址";
+            case "NAV_HOME_ENABLED" -> "是否在导航栏显示首页链接";
+            case "NAV_PROJECTS_ENABLED" -> "是否在导航栏显示项目链接";
+            case "NAV_BLOGS_ENABLED" -> "是否在导航栏显示博客链接";
+            case "NAV_FEEDBACK_ENABLED" -> "是否在导航栏显示反馈链接";
+            case "NAV_DONATION_ENABLED" -> "是否在导航栏显示打赏链接";
+            default -> key;
+        };
     }
 
     /**
