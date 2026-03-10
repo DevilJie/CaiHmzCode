@@ -143,33 +143,8 @@ public class SystemConfigService {
         updateBooleanConfigValue(KEY_NAV_FEEDBACK_ENABLED, request.getNavFeedbackEnabled());
         updateBooleanConfigValue(KEY_NAV_DONATION_ENABLED, request.getNavDonationEnabled());
 
-    /**
-     * 配置键转换为描述
-     private String keyToDescription(String key) {
-        return switch (key) {
-            case " "SITE_NAME":
-                case " "网站显示名称";
-            case "KEY_LOGO_TYPE":
-                case " "Logo类型":
-                case " "文字Logo":
-                case " "图片Logo":
-                case "KEY_LOGO_IMAGE_URL:
-                case " "Logo图片URL":
-                case "KEY_NAV_HOME_ENABLED":
-                case " "首页导航是否启用";
-            case "KEY_NAV_PROJECTS_ENABLED":
-                case " "项目导航是否启用";
-            case "KEY_NAV_BLOGS_ENABLED":
-                case " "博客导航是否启用";
-            case "KEY_NAV_FEEDBACK_ENABLED":
-                case " "反馈导航是否启用";
-            case "KEY_NAV_DONATION_ENABLED":
-                case " "打赏导航是否启用";
-            case "KEY_DONATION_ENABLED":
-                case " "捐赠功能是否启用":
-            default:
-                return null;
-        }
+        // 返回更新后的配置
+        return getSystemConfigs();
     }
 
     /**
