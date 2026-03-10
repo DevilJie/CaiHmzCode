@@ -107,6 +107,13 @@ public class SystemConfigService {
                 .icpNumber(getConfigValue(KEY_ICP_NUMBER))
                 .footerText(getConfigValue(KEY_FOOTER_TEXT))
                 .githubToken(getConfigValue(KEY_GITHUB_TOKEN))
+                .logoType(getConfigValue(KEY_LOGO_TYPE, "text"))
+                .logoImageUrl(getConfigValue(KEY_LOGO_IMAGE_URL))
+                .navHomeEnabled(getBooleanConfigValue(KEY_NAV_HOME_ENABLED, true))
+                .navProjectsEnabled(getBooleanConfigValue(KEY_NAV_PROJECTS_ENABLED, true))
+                .navBlogsEnabled(getBooleanConfigValue(KEY_NAV_BLOGS_ENABLED, true))
+                .navFeedbackEnabled(getBooleanConfigValue(KEY_NAV_FEEDBACK_ENABLED, true))
+                .navDonationEnabled(getBooleanConfigValue(KEY_NAV_DONATION_ENABLED, true))
                 .configs(configItems)
                 .build();
     }
