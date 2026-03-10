@@ -29,50 +29,50 @@ export default function HomePage() {
     {
       icon: (
         <svg className="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M17.25 6.75L22.5 12l-5.25 5.25m-10.5 0L1.5 25m7.5-3l-4.5 16.5" />
+          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M17.25 6.75L22.5 12l-5.25 5.25m-10.5 0L1.5 12l5.25-5.25m7.5-3l-4.5 16.5" />
         </svg>
       ),
       title: '项目展示',
       description: '探索AI驱动的创新项目，包含完整源码和技术文档',
       href: '/projects',
       gradient: 'from-violet-500 to-purple-600',
-      shadowColor: 'shadow-violet-200',
+      boxShadow: '0 4px 14px 0 rgba(139, 92, 246, 0.4)',
     },
     {
       icon: (
         <svg className="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M12 6.042A8.967 8.25c-3 .75 0-2.062.18-3 .512v14.25A8.987 0-2 .292 0H10a2.292 2-2 .292-2v6.22a2.292 0 2 2.305 0 2.292 0-2.305 0 .867 0 1 0 012.295-.423 1.253-0 1.25. z" />
+          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M12 6.042A8.967 8.967 0 006 3.75c-1.052 0-2.062.18-3 .512v14.25A8.987 8.987 0 016 18c2.305 0 4.408.867 6 2.292m0-14.25a8.966 8.966 0 016-2.292c1.052 0 2.062.18 3 .512v14.25A8.987 8.987 0 0018 18a8.967 8.967 0 00-6 2.292m0-14.25v14.25" />
         </svg>
       ),
       title: '技术博客',
       description: '深度技术文章，分享前端、后端、AI领域知识',
       href: '/blogs',
       gradient: 'from-blue-500 to-cyan-500',
-      shadowColor: 'shadow-blue-200',
+      boxShadow: '0 4px 14px 0 rgba(59, 130, 246, 0.4)',
     },
     {
       icon: (
         <svg className="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M8.625 12a.375 0 11-.75 0 3h.01m-9 8.25c-3 .75 0-2.062.18-3 .512v14.25A8.987 0-2 .292 0H10a2.292 2-2 .292-2v6.22a2.292 0 2.375 0 2.292 0-2.305 0 2.292 0-2.305 0 .813 0 1.05-1.5" stroke="white text-slate-700 dark:text-slate-300" />
+          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M8.625 12a.375.375 0 11-.75 0 .375.375 0 01.75 0zm0 0H8.25m4.125 0a.375.375 0 11-.75 0 .375.375 0 01.75 0zm0 0H12m4.125 0a.375.375 0 11-.75 0 .375.375 0 01.75 0zm0 0h-.375M21 12c0 4.556-4.03 8.25-9 8.25a9.764 9.764 0 01-2.555-.337A5.972 5.972 0 015.41 20.97a5.969 5.969 0 01-.474-.065 4.48 4.48 0 00.978-2.025c.09-.457-.133-.901-.467-1.226C3.93 16.178 3 14.189 3 12c0-4.556 4.03-8.25 9-8.25s9 3.694 9 8.25z" />
         </svg>
       ),
       title: '意见反馈',
       description: '分享您的想法和建议，帮助我们持续改进',
       href: '/feedback',
       gradient: 'from-emerald-500 to-teal-500',
-      shadowColor: 'shadow-emerald-200',
+      boxShadow: '0 4px 14px 0 rgba(16, 185, 129, 0.4)',
     },
     {
       icon: (
         <svg className="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M8.625 12a.375 0 11-.75 0 3h.01m-9 8.25c-3 .75 0-2.062.18-3 .512v14.25A8.987 0-2 .292 0H10a2.292 2-2 .292-2v6.22a2.292 0 2.375 0 2.292 0-2.305 0 2.292 0-2.305 0 .813 0 1.5" stroke="white text-slate-700 dark:text-slate-300" />
+          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M21 8.25c0-2.485-2.099-4.5-4.688-4.5-1.935 0-3.597 1.126-4.312 2.733-.715-1.607-2.377-2.733-4.313-2.733C5.1 3.75 3 5.765 3 8.25c0 7.22 9 12 9 12s9-4.78 9-12z" />
         </svg>
       ),
       title: '支持作者',
       description: '如果内容有帮助，欢迎打赏支持持续创作',
       href: '/donation',
       gradient: 'from-rose-500 to-pink-500',
-      shadowColor: 'shadow-rose-200',
+      boxShadow: '0 4px 14px 0 rgba(244, 63, 94, 0.4)',
     },
   ];
 
@@ -126,11 +126,11 @@ export default function HomePage() {
                 className="group inline-flex items-center gap-2 px-8 py-4 bg-white text-slate-900 font-semibold rounded-2xl hover:bg-slate-100 transition-all shadow-xl shadow-white/20"
               >
                 <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17.25 6.75L22.5 12l-5.25 5.25m-10.5 0L1.5 12l5.25 5.25m7.5-3l-4.5 16.5" />
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M2.25 12.75V12A2.25 2.25 0 014.5 9.75h15A2.25 2.25 0 0121.75 12v.75m-8.69-6.44l-2.12-2.12a1.5 1.5 0 00-1.061-.44H4.5A2.25 2.25 0 002.25 6v12a2.25 2.25 0 002.25 2.25h15A2.25 2.25 0 0021.75 18V9a2.25 2.25 0 00-2.25-2.25h-5.379a1.5 1.5 0 01-1.06-.44z" />
                 </svg>
                 浏览项目
                 <svg className="w-4 h-4 group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 7l5 5m0 0l-5 5m5-5H6" />
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13.5 4.5L21 12m0 0l-7.5 7.5M21 12H3" />
                 </svg>
               </Link>
               <Link
@@ -138,7 +138,7 @@ export default function HomePage() {
                 className="group inline-flex items-center gap-2 px-8 py-4 bg-white/10 backdrop-blur-sm text-white font-semibold rounded-2xl border border-white/20 hover:bg-white/20 transition-all"
               >
                 <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6.253v13m0-13C10.832 5.477 9.246 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6.042A8.967 8.967 0 006 3.75c-1.052 0-2.062.18-3 .512v14.25A8.987 8.987 0 016 18c2.305 0 4.408.867 6 2.292m0-14.25a8.966 8.966 0 016-2.292c1.052 0 2.062.18 3 .512v14.25A8.987 8.987 0 0018 18a8.967 8.967 0 00-6 2.292m0-14.25v14.25" />
                 </svg>
                 阅读博客
               </Link>
@@ -204,7 +204,10 @@ export default function HomePage() {
                 <div className={`absolute inset-0 bg-gradient-to-br ${feature.gradient} opacity-0 group-hover:opacity-5 transition-opacity duration-500`} />
 
                 {/* 图标 */}
-                <div className={`relative w-14 h-14 rounded-2xl bg-gradient-to-br ${feature.gradient} flex items-center justify-center text-white mb-5 shadow-lg ${feature.shadowColor} group-hover:scale-110 transition-transform duration-300`}>
+                <div
+                  className={`relative w-14 h-14 rounded-2xl bg-gradient-to-br ${feature.gradient} flex items-center justify-center text-white mb-5 group-hover:scale-110 transition-transform duration-300`}
+                  style={{ boxShadow: feature.boxShadow }}
+                >
                   {feature.icon}
                 </div>
 
