@@ -24,14 +24,35 @@ body {
 
 /* 管理端样式隔离 - 不受深色模式影响 */
 .admin-layout {
+  color-scheme: light !important;
   color: #1e293b !important;
   background-color: #f1f5f9 !important;
 }
 
+/* 管理端所有子元素强制浅色模式 */
+.admin-layout *,
+.admin-layout *::before,
+.admin-layout *::after {
+  border-color: #e2e8f0 !important;
+}
+
 /* 管理端表单元素强制浅色模式 */
 .admin-layout input,
+.admin-layout input:focus,
 .admin-layout textarea,
+.admin-layout textarea:focus,
 .admin-layout select,
+.admin-layout select:focus {
+  background-color: #ffffff !important;
+  border-color: #e2e8f0 !important;
+  color: #1e293b !important;
+}
+
+.admin-layout input::placeholder,
+.admin-layout textarea::placeholder {
+  color: #94a3b8 !important;
+}
+
 .admin-layout button:not([class*="bg-primary"]):not([class*="bg-secondary-300"]),
 .admin-layout .bg-white,
 .admin-layout .bg-secondary-50,
@@ -40,10 +61,24 @@ body {
   border-color: #e2e8f0 !important;
 }
 
+.admin-layout .text-secondary-500,
+.admin-layout .text-secondary-600,
 .admin-layout .text-secondary-700,
 .admin-layout .text-secondary-800,
-.admin-layout label {
+.admin-layout label,
+.admin-layout h1,
+.admin-layout h2,
+.admin-layout h3,
+.admin-layout h4,
+.admin-layout h5,
+.admin-layout h6,
+.admin-layout p,
+.admin-layout span {
   color: #334155 !important;
+}
+
+.admin-layout .text-secondary-500 {
+  color: #64748b !important;
 }
 
 .admin-layout .border-secondary-200,
@@ -53,6 +88,48 @@ body {
 
 .admin-layout .shadow-card {
   box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1) !important;
+}
+
+/* 管理端表格样式 */
+.admin-layout table {
+  background-color: #ffffff !important;
+}
+
+.admin-layout thead {
+  background-color: #f8fafc !important;
+}
+
+.admin-layout th {
+  color: #475569 !important;
+  background-color: #f8fafc !important;
+}
+
+.admin-layout td {
+  color: #334155 !important;
+  background-color: #ffffff !important;
+}
+
+.admin-layout tbody tr:hover {
+  background-color: #f8fafc !important;
+}
+
+/* 管理端滚动条强制浅色 */
+.admin-layout ::-webkit-scrollbar-track {
+  background: #f1f1f1 !important;
+}
+
+.admin-layout ::-webkit-scrollbar-thumb {
+  background: #c1c1c1 !important;
+}
+
+.admin-layout ::-webkit-scrollbar-thumb:hover {
+  background: #a8a8a8 !important;
+}
+
+/* 管理端卡片容器 */
+.admin-layout .rounded-lg,
+.admin-layout [class*="rounded-"] {
+  background-color: #ffffff !important;
 }
 
 /* 自定义滚动条 - 浅色模式 */
