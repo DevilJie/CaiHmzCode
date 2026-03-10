@@ -31,7 +31,6 @@ const DEFAULT_SITE_INFO: SiteInfo = {
   footerText: '',
   logoType: 'text',
   logoImageUrl: '',
-  donationEnabled: false,
   navConfig: {
     home: true,
     projects: true,
@@ -80,12 +79,7 @@ export default function Navbar() {
   const getNavLinks = () => {
     return Object.entries(NAV_LINK_MAP)
       .filter(([key]) => {
-        const enabled = siteInfo.navConfig[key as keyof NavConfig];
-        // 打赏导航需要额外检查donationEnabled
-        if (key === 'donation') {
-          return enabled && siteInfo.donationEnabled;
-        }
-        return enabled;
+        return siteInfo.navConfig[key as keyof NavConfig];
       })
       .map(([key, value]) => ({
         ...value,

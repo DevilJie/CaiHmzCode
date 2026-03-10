@@ -403,38 +403,6 @@ export default function SettingsPage() {
             </div>
           </div>
 
-          {/* 打赏功能配置 */}
-          <div className="rounded-lg bg-white p-6 shadow-card">
-            <h2 className="mb-4 text-lg font-semibold text-secondary-800">
-              打赏功能
-            </h2>
-            <div className="flex items-center justify-between rounded-lg border border-secondary-200 p-3">
-              <div>
-                <span className="font-medium text-secondary-800">启用打赏功能</span>
-                <p className="text-xs text-secondary-500">
-                  开启后，用户可以在打赏页面查看收款码并进行打赏
-                </p>
-              </div>
-              <button
-                type="button"
-                onClick={() =>
-                  setFormData({ ...formData, donationEnabled: !formData.donationEnabled })
-                }
-                className={clsx(
-                  'relative inline-flex h-6 w-11 flex-shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-none focus:ring-2 focus:ring-primary-500 focus:ring-offset-2',
-                  formData.donationEnabled ? 'bg-primary-600' : 'bg-secondary-300'
-                )}
-              >
-                <span
-                  className={clsx(
-                    'pointer-events-none inline-block h-5 w-5 transform rounded-full bg-white shadow ring-0 transition duration-200 ease-in-out',
-                    formData.donationEnabled ? 'translate-x-5' : 'translate-x-0'
-                  )}
-                />
-              </button>
-            </div>
-          </div>
-
           {/* 配置项列表 */}
           {config?.configs && config.configs.length > 0 && (
             <div className="rounded-lg bg-white p-6 shadow-card">

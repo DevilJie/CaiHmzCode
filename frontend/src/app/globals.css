@@ -24,12 +24,35 @@ body {
 
 /* 管理端样式隔离 - 不受深色模式影响 */
 .admin-layout {
-  color: #1e293b;
-  background-color: #f1f5f9;
+  color: #1e293b !important;
+  background-color: #f1f5f9 !important;
 }
 
-.admin-layout * {
-  --tw-bg-opacity: 1;
+/* 管理端表单元素强制浅色模式 */
+.admin-layout input,
+.admin-layout textarea,
+.admin-layout select,
+.admin-layout button:not([class*="bg-primary"]):not([class*="bg-secondary-300"]),
+.admin-layout .bg-white,
+.admin-layout .bg-secondary-50,
+.admin-layout .bg-secondary-100 {
+  background-color: #ffffff !important;
+  border-color: #e2e8f0 !important;
+}
+
+.admin-layout .text-secondary-700,
+.admin-layout .text-secondary-800,
+.admin-layout label {
+  color: #334155 !important;
+}
+
+.admin-layout .border-secondary-200,
+.admin-layout .border-secondary-300 {
+  border-color: #e2e8f0 !important;
+}
+
+.admin-layout .shadow-card {
+  box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1) !important;
 }
 
 /* 自定义滚动条 - 浅色模式 */

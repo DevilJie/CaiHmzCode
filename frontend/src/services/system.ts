@@ -23,7 +23,6 @@ const DEFAULT_SITE_INFO: SiteInfo = {
   footerText: '',
   logoType: 'text',
   logoImageUrl: '',
-  donationEnabled: false,
   navConfig: DEFAULT_NAV_CONFIG,
 };
 
