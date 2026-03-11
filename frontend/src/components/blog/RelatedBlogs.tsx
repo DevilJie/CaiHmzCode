@@ -74,7 +74,7 @@ export default function RelatedBlogs({ blogs, loading = false }: RelatedBlogsPro
         {blogs.map((blog, index) => (
           <Link
             key={blog.id}
-            href={`/blogs/${blog.id}`}
+            href={`/blogs/detail?id=${blog.id}`}
             className="flex items-center gap-3 p-3 bg-slate-50/80 rounded-xl hover:bg-slate-100 transition-all duration-300 group"
             style={{ animationDelay: `${index * 100}ms` }}
           >

@@ -121,7 +121,7 @@ export default function BlogList() {
           共 {totalElements} 篇博客
         </p>
         <Link
-          href="/admin/blogs/edit/new"
+          href="/admin/blogs/edit"
           className="inline-flex items-center px-4 py-2 bg-primary-500 text-white text-sm font-medium rounded-lg hover:bg-primary-600 transition-colors"
         >
           <svg
@@ -208,7 +208,7 @@ export default function BlogList() {
           </svg>
           <p>暂无博客数据</p>
           <Link
-            href="/admin/blogs/edit/new"
+            href="/admin/blogs/edit"
             className="mt-4 text-primary-500 hover:underline text-sm"
           >
             点击新建第一篇博客
@@ -309,7 +309,7 @@ export default function BlogList() {
                     <td className="px-4 py-3">
                       <div className="flex items-center justify-center gap-2">
                         <Link
-                          href={`/admin/blogs/edit/${blog.id}`}
+                          href={`/admin/blogs/edit?id=${blog.id}`}
                           className="text-primary-500 hover:text-primary-700 text-sm"
                         >
                           编辑

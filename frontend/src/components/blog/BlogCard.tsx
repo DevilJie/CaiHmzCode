@@ -35,7 +35,7 @@ export default function BlogCard({ blog, layoutMode = 'grid' }: BlogCardProps) {
   if (layoutMode === 'list') {
     return (
       <Link
-        href={`/blogs/${id}`}
+        href={`/blogs/detail?id=${id}`}
         className="group block"
       >
         <article className="relative flex flex-col sm:flex-row gap-4 sm:gap-6 bg-white dark:bg-dark-800 rounded-2xl overflow-hidden border border-slate-100 dark:border-dark-700 hover:border-slate-200 dark:hover:border-dark-600 hover:shadow-xl hover:shadow-slate-200/50 dark:hover:shadow-dark-900/30 transition-all duration-500 p-4 sm:p-5">
@@ -136,7 +136,7 @@ export default function BlogCard({ blog, layoutMode = 'grid' }: BlogCardProps) {
   // 卡片视图布局（默认）
   return (
     <Link
-      href={`/blogs/${id}`}
+      href={`/blogs/detail?id=${id}`}
       className="group block h-full"
     >
       <article className="relative h-full bg-white dark:bg-dark-800 rounded-2xl overflow-hidden border border-slate-100 dark:border-dark-700 hover:border-slate-200 dark:hover:border-dark-600 hover:shadow-xl hover:shadow-slate-200/50 dark:hover:shadow-dark-900/30 transition-all duration-500">

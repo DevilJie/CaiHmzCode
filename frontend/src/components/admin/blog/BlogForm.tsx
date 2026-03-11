@@ -106,7 +106,7 @@ export default function BlogForm({ blogId, initialData }: BlogFormProps) {
       } else {
         const created = await adminBlogService.createBlog(data);
         // 创建成功后跳转到编辑页面
-        router.replace(`/admin/blogs/edit/${created.id}`);
+        router.replace(`/admin/blogs/edit?id=${created.id}`);
       }
     } catch (error) {
       console.error('自动保存失败:', error);
@@ -139,7 +139,7 @@ export default function BlogForm({ blogId, initialData }: BlogFormProps) {
       } else {
         const created = await adminBlogService.createBlog(data);
         showSuccess('草稿保存成功');
-        router.replace(`/admin/blogs/edit/${created.id}`);
+        router.replace(`/admin/blogs/edit?id=${created.id}`);
       }
     } catch (error) {
       showError('保存失败');

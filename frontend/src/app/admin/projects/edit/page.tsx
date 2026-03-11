@@ -1,34 +1,37 @@
 'use client';
 
+import { Suspense } from 'react';
 import Link from 'next/link';
 import clsx from 'clsx';
 import { ProjectForm } from '@/components/admin/project';
+import Loading from '@/components/ui/Loading';
+import { useSearchParams } from 'next/navigation';
 
 /**
- * 项目编辑页面Props
+ * 项目编辑页面内容组件
  */
-interface PageProps {
-  params: {
-    id: string;
-  };
-}
-
-/**
- * 项目编辑页面
- * 支持新增和编辑模式
- * - /admin/projects/edit/new - 新增模式
- * - /admin/projects/edit/123 - 编辑模式
- */
-export default function ProjectEditPage({ params }: PageProps) {
-  // Next.js 14 中 params 不是 Promise，可以直接解构使用
-  const { id } = params;
+function ProjectEditPageContent() {
+  const searchParams = useSearchParams();
+  const idParam = searchParams.get('id');
 
   // 判断是否为新增模式
-  const isNewMode = id === 'new';
-  const projectId = isNewMode ? undefined : parseInt(id);
+  const isNewMode = !idParam || idParam === 'new';
+
+  // 解析ID
+  let projectId: number | undefined;
+  let invalidId = false;
+
+  if (!isNewMode) {
+    const parsedId = parseInt(idParam!, 10);
+    if (isNaN(parsedId) || parsedId <= 0) {
+      invalidId = true;
+    } else {
+      projectId = parsedId;
+    }
+  }
 
   // 无效的项目ID（既不是 new 也不是有效数字）
-  if (!isNewMode && isNaN(projectId!)) {
+  if (invalidId) {
     return (
       <div className="flex flex-col items-center justify-center py-16">
         <svg
@@ -100,5 +103,26 @@ export default function ProjectEditPage({ params }: PageProps) {
         <ProjectForm projectId={projectId} />
       </div>
     </div>
+  );
+}
+
+/**
+ * 项目编辑页面
+ * 支持新增和编辑模式
+ * - /admin/projects/edit - 新增模式
+ * - /admin/projects/edit?id=new - 新增模式
+ * - /admin/projects/edit?id=123 - 编辑模式
+ */
+export default function ProjectEditPage() {
+  return (
+    <Suspense
+      fallback={
+        <div className="flex items-center justify-center min-h-[400px]">
+          <Loading />
+        </div>
+      }
+    >
+      <ProjectEditPageContent />
+    </Suspense>
   );
 }

@@ -20,7 +20,7 @@ export default function ProjectCard({ project }: ProjectCardProps) {
 
   return (
     <Link
-      href={`/projects/${id}`}
+      href={`/projects/detail?id=${id}`}
       data-testid="project-card"
       className="group block bg-white dark:bg-dark-800 rounded-xl shadow-card dark:shadow-dark-900/30 overflow-hidden hover:shadow-lg dark:hover:shadow-dark-900/50 transition-all duration-300 hover:-translate-y-1"
     >

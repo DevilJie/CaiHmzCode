@@ -102,7 +102,7 @@ export default function ProjectsPage() {
         </div>
 
         <Link
-          href="/admin/projects/edit/new"
+          href="/admin/projects/edit"
           className={clsx(
             'inline-flex items-center gap-2 px-4 py-2 rounded-lg',
             'bg-primary-500 text-white hover:bg-primary-600',
