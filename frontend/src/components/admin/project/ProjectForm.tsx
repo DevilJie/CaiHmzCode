@@ -193,7 +193,7 @@ export default function ProjectForm({ projectId }: ProjectFormProps) {
         const result = await adminProjectService.createProject(form);
         showSuccess('项目创建成功');
         // 创建成功后跳转到编辑页
-        router.push(`/admin/projects/edit/${(result as Project).id}`);
+        router.push(`/admin/projects/edit?id=${(result as Project).id}`);
         return;
       }
     } catch (error) {

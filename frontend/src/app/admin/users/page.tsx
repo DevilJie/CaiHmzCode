@@ -48,7 +48,7 @@ export default function UsersPage() {
       const data = await adminUserService.getUserList(params);
       setUsers(data);
     } catch (error) {
-      showToast('加载用户列表失败', 'error');
+      showToast('error', '加载用户列表失败');
       console.error(error);
     } finally {
       setLoading(false);
@@ -77,10 +77,10 @@ export default function UsersPage() {
 
     try {
       await adminUserService.deleteUser(user.id);
-      showToast('删除用户成功', 'success');
+      showToast('success', '删除用户成功');
       loadUsers();
     } catch (error) {
-      showToast('删除用户失败', 'error');
+      showToast('error', '删除用户失败');
       console.error(error);
     }
   };
@@ -95,10 +95,10 @@ export default function UsersPage() {
 
     try {
       await adminUserService.toggleUserStatus(user.id, newStatus);
-      showToast(`用户已${action}`, 'success');
+      showToast('success', `用户已${action}`);
       loadUsers();
     } catch (error) {
-      showToast(`${action}用户失败`, 'error');
+      showToast('error', `${action}用户失败`);
       console.error(error);
     }
   };

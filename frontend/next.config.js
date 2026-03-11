@@ -1,32 +1,15 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-  // 图片域名配置
+  // 静态导出配置
+  output: 'export',
+
+  // 图片配置 - 静态导出时禁用图片优化
   images: {
-    domains: ['localhost', '192.168.31.7'],
-    remotePatterns: [
-      {
-        protocol: 'https',
-        hostname: '**',
-      },
-    ],
+    unoptimized: true,
   },
-  // API代理配置 - 开发环境代理到后端8080端口
-  async rewrites() {
-    return [
-      {
-        source: '/api/:path*',
-        destination: 'http://localhost:8080/api/:path*',
-      },
-      {
-        source: '/uploads/:path*',
-        destination: 'http://localhost:8080/uploads/:path*',
-      },
-    ];
-  },
+
   // 严格模式
-  reactStrictMode: true,
-  // 输出配置（如需静态导出可修改）
-  // output: 'export',
+  reactStrictMode: false,
 };
 
 module.exports = nextConfig;

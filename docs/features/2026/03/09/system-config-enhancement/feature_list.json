@@ -1,0 +1,335 @@
+{
+  "featureName": "system-config-enhancement",
+  "description": "系统配置增强与用户体验优化 - 实现Logo/导航配置、多级分类、主题切换等功能",
+  "createdAt": "2026-03-09",
+  "status": "pending",
+  "sourcePlan": "docs/plans/2026-03-09-system-config-enhancement.md",
+  "features": [
+    {
+      "id": "F001",
+      "devType": "backend",
+      "priority": "P0",
+      "phase": 0,
+      "description": "扩展SiteInfoResponse DTO - 添加Logo类型、Logo图片地址、打赏功能开关、导航配置字段",
+      "steps": [
+        "在SiteInfoResponse中添加logoType、logoImageUrl、donationEnabled字段",
+        "创建NavConfig内部类，包含home/projects/blogs/feedback/donation布尔字段",
+        "运行 mvn compile 验证编译",
+        "提交代码"
+      ],
+      "files": ["backend/src/main/java/com/aifactory/techshare/dto/SiteInfoResponse.java"],
+      "passes": false,
+      "blockedBy": []
+    },
+    {
+      "id": "F002",
+      "devType": "backend",
+      "priority": "P0",
+      "phase": 0,
+      "description": "扩展SystemConfigService - 支持Logo和导航配置的获取",
+      "steps": [
+        "添加新的配置键常量：LOGO_TYPE、LOGO_IMAGE_URL、DONATION_ENABLED等",
+        "修改getSiteInfo方法，构建完整的SiteInfoResponse",
+        "添加getConfigValue重载方法和getBooleanConfigValue辅助方法",
+        "运行 mvn compile 验证编译",
+        "提交代码"
+      ],
+      "files": ["backend/src/main/java/com/aifactory/techshare/service/SystemConfigService.java"],
+      "passes": false,
+      "blockedBy": ["F001"]
+    },
+    {
+      "id": "F003",
+      "devType": "backend",
+      "priority": "P0",
+      "phase": 0,
+      "description": "扩展SystemConfigRequest DTO并更新Service - 支持配置更新",
+      "steps": [
+        "在SystemConfigRequest中添加logoType、logoImageUrl、donationEnabled、导航开关字段",
+        "更新updateSystemConfigs方法处理新字段",
+        "添加updateBooleanConfigValue辅助方法",
+        "运行 mvn compile 验证编译",
+        "提交代码"
+      ],
+      "files": [
+        "backend/src/main/java/com/aifactory/techshare/dto/SystemConfigRequest.java",
+        "backend/src/main/java/com/aifactory/techshare/service/SystemConfigService.java"
+      ],
+      "passes": false,
+      "blockedBy": ["F002"]
+    },
+    {
+      "id": "F004",
+      "devType": "backend",
+      "priority": "P0",
+      "phase": 0,
+      "description": "初始化数据库配置项 - 插入新的系统配置记录",
+      "steps": [
+        "创建SQL迁移脚本添加LOGO_TYPE、LOGO_IMAGE_URL等配置项",
+        "使用MySQL MCP或手动执行SQL",
+        "提交SQL文件"
+      ],
+      "files": ["backend/src/main/resources/sql/system-config-enhancement.sql"],
+      "passes": false,
+      "blockedBy": []
+    },
+    {
+      "id": "F005",
+      "devType": "frontend",
+      "priority": "P0",
+      "phase": 1,
+      "description": "更新前端类型定义 - 添加NavConfig和扩展SiteInfo接口",
+      "steps": [
+        "添加NavConfig接口定义",
+        "扩展SiteInfo接口添加logoType、logoImageUrl、donationEnabled、navConfig字段",
+        "扩展SystemConfigRequest接口添加对应字段",
+        "提交代码"
+      ],
+      "files": ["frontend/src/types/index.ts"],
+      "passes": false,
+      "blockedBy": []
+    },
+    {
+      "id": "F006",
+      "devType": "frontend",
+      "priority": "P0",
+      "phase": 1,
+      "description": "创建用户端系统配置服务",
+      "steps": [
+        "创建src/services/system.ts文件",
+        "实现getSiteInfo方法调用/system/info接口",
+        "提供默认配置作为fallback",
+        "提交代码"
+      ],
+      "files": ["frontend/src/services/system.ts"],
+      "passes": false,
+      "blockedBy": ["F005"]
+    },
+    {
+      "id": "F007",
+      "devType": "frontend",
+      "priority": "P0",
+      "phase": 1,
+      "description": "重构Navbar组件 - 配置驱动，移除管理后台入口",
+      "steps": [
+        "导入systemService获取siteInfo",
+        "基于navConfig动态生成导航链接",
+        "实现renderLogo方法支持文字/图片两种模式",
+        "移除管理后台入口链接",
+        "运行 npm run build 验证编译",
+        "提交代码"
+      ],
+      "files": ["frontend/src/components/layout/Navbar.tsx"],
+      "passes": false,
+      "blockedBy": ["F006"]
+    },
+    {
+      "id": "F008",
+      "devType": "frontend",
+      "priority": "P1",
+      "phase": 1,
+      "description": "更新管理端设置页面 - 添加Logo和导航配置UI",
+      "steps": [
+        "扩展formData状态添加新字段",
+        "添加Logo配置区域（类型选择、图片URL输入）",
+        "添加导航配置区域（各导航开关）",
+        "添加打赏功能开关",
+        "更新loadConfig和handleSubmit处理新字段",
+        "提交代码"
+      ],
+      "files": ["frontend/src/app/admin/settings/page.tsx"],
+      "passes": false,
+      "blockedBy": ["F005", "F003"]
+    },
+    {
+      "id": "F009",
+      "devType": "backend",
+      "priority": "P1",
+      "phase": 2,
+      "description": "扩展BlogCategory实体 - 支持多级分类",
+      "steps": [
+        "添加parentId字段（父分类ID）",
+        "添加level字段（层级深度）",
+        "创建数据库迁移脚本添加字段和索引",
+        "提交代码"
+      ],
+      "files": [
+        "backend/src/main/java/com/aifactory/techshare/entity/BlogCategory.java",
+        "backend/src/main/resources/sql/category-hierarchy.sql"
+      ],
+      "passes": false,
+      "blockedBy": []
+    },
+    {
+      "id": "F010",
+      "devType": "backend",
+      "priority": "P1",
+      "phase": 2,
+      "description": "创建分类树DTO和扩展BlogCategoryService",
+      "steps": [
+        "创建CategoryTreeResponse DTO（含children和isLeaf字段）",
+        "在BlogCategoryService中添加getCategoryTree方法",
+        "添加getLeafCategories方法获取末级分类",
+        "添加buildTree递归方法构建树结构",
+        "添加createCategory方法（自动计算level）",
+        "添加deleteCategory方法（检查子分类）",
+        "提交代码"
+      ],
+      "files": [
+        "backend/src/main/java/com/aifactory/techshare/dto/CategoryTreeResponse.java",
+        "backend/src/main/java/com/aifactory/techshare/service/BlogCategoryService.java"
+      ],
+      "passes": false,
+      "blockedBy": ["F009"]
+    },
+    {
+      "id": "F011",
+      "devType": "backend",
+      "priority": "P1",
+      "phase": 2,
+      "description": "添加分类树API接口",
+      "steps": [
+        "在AdminBlogCategoryController中添加GET /tree接口",
+        "添加GET /leaves接口获取末级分类",
+        "提交代码"
+      ],
+      "files": ["backend/src/main/java/com/aifactory/techshare/controller/admin/AdminBlogCategoryController.java"],
+      "passes": false,
+      "blockedBy": ["F010"]
+    },
+    {
+      "id": "F012",
+      "devType": "frontend",
+      "priority": "P2",
+      "phase": 3,
+      "description": "安装next-themes依赖并配置Tailwind暗色模式",
+      "steps": [
+        "运行 npm install next-themes",
+        "在tailwind.config.js中启用darkMode: 'class'",
+        "添加dark主题色配置",
+        "提交代码"
+      ],
+      "files": [
+        "frontend/package.json",
+        "frontend/tailwind.config.js"
+      ],
+      "passes": false,
+      "blockedBy": []
+    },
+    {
+      "id": "F013",
+      "devType": "frontend",
+      "priority": "P2",
+      "phase": 3,
+      "description": "创建ThemeProvider和主题切换组件",
+      "steps": [
+        "创建src/providers/ThemeProvider.tsx包装next-themes",
+        "创建src/components/layout/ThemeToggle.tsx主题切换按钮",
+        "提交代码"
+      ],
+      "files": [
+        "frontend/src/providers/ThemeProvider.tsx",
+        "frontend/src/components/layout/ThemeToggle.tsx"
+      ],
+      "passes": false,
+      "blockedBy": ["F012"]
+    },
+    {
+      "id": "F014",
+      "devType": "frontend",
+      "priority": "P2",
+      "phase": 3,
+      "description": "集成ThemeProvider到用户端布局并添加切换按钮",
+      "steps": [
+        "在src/app/(user)/layout.tsx中添加ThemeProvider",
+        "在Navbar中添加ThemeToggle按钮",
+        "运行 npm run build 验证",
+        "提交代码"
+      ],
+      "files": [
+        "frontend/src/app/(user)/layout.tsx",
+        "frontend/src/components/layout/Navbar.tsx"
+      ],
+      "passes": false,
+      "blockedBy": ["F013", "F007"]
+    },
+    {
+      "id": "F015",
+      "devType": "frontend",
+      "priority": "P2",
+      "phase": 4,
+      "description": "创建博客布局切换组件并集成",
+      "steps": [
+        "创建src/components/blog/LayoutToggle.tsx组件",
+        "在博客页面添加布局状态管理（localStorage持久化）",
+        "根据layout状态渲染不同布局",
+        "提交代码"
+      ],
+      "files": [
+        "frontend/src/components/blog/LayoutToggle.tsx",
+        "frontend/src/app/(user)/blogs/page.tsx"
+      ],
+      "passes": false,
+      "blockedBy": []
+    },
+    {
+      "id": "F016",
+      "devType": "frontend",
+      "priority": "P2",
+      "phase": 5,
+      "description": "调整博客页面标签位置",
+      "steps": [
+        "将标签筛选区域移动到分类筛选下方",
+        "调整页面布局",
+        "提交代码"
+      ],
+      "files": ["frontend/src/app/(user)/blogs/page.tsx"],
+      "passes": false,
+      "blockedBy": ["F015"]
+    }
+  ],
+  "teamAssignments": {
+    "backend-developer": {
+      "role": "Backend Developer",
+      "skills": ["spring-boot-engineer", "java-architect"],
+      "tasks": ["F001", "F002", "F003", "F004", "F009", "F010", "F011"]
+    },
+    "frontend-developer": {
+      "role": "Frontend Developer",
+      "skills": ["react-expert", "nextjs-developer"],
+      "tasks": ["F005", "F006", "F007", "F008", "F012", "F013", "F014", "F015", "F016"]
+    }
+  },
+  "executionOrder": [
+    {
+      "wave": 1,
+      "parallel": true,
+      "tasks": ["F001", "F004", "F005", "F009", "F012", "F015"],
+      "description": "无依赖的基础任务可并行执行"
+    },
+    {
+      "wave": 2,
+      "parallel": true,
+      "tasks": ["F002", "F006", "F010", "F013"],
+      "description": "依赖Wave 1的任务"
+    },
+    {
+      "wave": 3,
+      "parallel": true,
+      "tasks": ["F003", "F007", "F011", "F014"],
+      "description": "依赖Wave 2的任务"
+    },
+    {
+      "wave": 4,
+      "parallel": false,
+      "tasks": ["F008"],
+      "description": "管理端设置页面（依赖前后端完成）"
+    },
+    {
+      "wave": 5,
+      "parallel": false,
+      "tasks": ["F016"],
+      "description": "最后的UI调整"
+    }
+  ]
+}

@@ -186,7 +186,7 @@ export default function ProjectList({
         </svg>
         <p className="mt-4 text-secondary-500">暂无项目数据</p>
         <Link
-          href="/admin/projects/edit/new"
+          href="/admin/projects/edit"
           className="mt-4 px-4 py-2 text-sm rounded-lg bg-primary-500 text-white hover:bg-primary-600 transition-colors"
         >
           创建第一个项目
@@ -326,7 +326,7 @@ export default function ProjectList({
                   <div className="flex items-center justify-end gap-2">
                     {/* 编辑 */}
                     <Link
-                      href={`/admin/projects/edit/${project.id}`}
+                      href={`/admin/projects/edit?id=${project.id}`}
                       className={clsx(
                         'p-1.5 rounded-lg text-secondary-500',
                         'hover:bg-secondary-100 hover:text-secondary-700',

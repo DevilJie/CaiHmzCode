@@ -36,4 +36,39 @@ public class SystemConfigRequest implements Serializable {
      */
     private String githubToken;
 
+    /**
+     * Logo类型 (text/image)
+     */
+    private String logoType;
+
+    /**
+     * Logo图片URL
+     */
+    private String logoImageUrl;
+
+    /**
+     * 是否显示首页导航
+     */
+    private Boolean navHomeEnabled;
+
+    /**
+     * 是否显示项目导航
+     */
+    private Boolean navProjectsEnabled;
+
+    /**
+     * 是否显示博客导航
+     */
+    private Boolean navBlogsEnabled;
+
+    /**
+     * 是否显示反馈导航
+     */
+    private Boolean navFeedbackEnabled;
+
+    /**
+     * 是否显示捐赠导航
+     */
+    private Boolean navDonationEnabled;
+
 }

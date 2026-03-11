@@ -22,6 +22,11 @@ public class CategoryRequest implements Serializable {
     private String name;
 
     /**
+     * 父分类ID，顶级分类传NULL或不传
+     */
+    private Long parentId;
+
+    /**
      * 排序顺序
      */
     private Integer sortOrder;

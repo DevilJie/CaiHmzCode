@@ -77,3 +77,4 @@ mobile-viewport.png
 /current-state
 /run-tests.bat
 /scripts
+/playwright*

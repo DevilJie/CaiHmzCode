@@ -5,8 +5,8 @@ import axios from 'axios';
  * 用于与后端API通信
  */
 const apiClient = axios.create({
-  // API基础路径，通过Next.js代理到后端
-  baseURL: '/api/v1',
+  // API基础路径，使用环境变量配置后端地址
+  baseURL: `${process.env.NEXT_PUBLIC_API_URL || ''}/api/v1`,
   // 请求超时时间
   timeout: 30000,
   // 请求头配置

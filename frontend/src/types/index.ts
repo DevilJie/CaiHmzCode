@@ -219,12 +219,26 @@ export interface SystemConfig {
 }
 
 /**
+ * 导航栏配置
+ */
+export interface NavConfig {
+  home: boolean;
+  projects: boolean;
+  blogs: boolean;
+  feedback: boolean;
+  donation: boolean;
+}
+
+/**
  * 网站信息
  */
 export interface SiteInfo {
   siteName: string;
   icpNumber: string;
   footerText: string;
+  logoType: 'text' | 'image';
+  logoImageUrl: string;
+  navConfig: NavConfig;
 }
 
 // ==================== 系统配置扩展 ====================
@@ -237,6 +251,13 @@ export interface SystemConfigResponse {
   icpNumber: string;
   footerText: string;
   githubToken: string;
+  logoType?: 'text' | 'image';
+  logoImageUrl?: string;
+  navHomeEnabled?: boolean;
+  navProjectsEnabled?: boolean;
+  navBlogsEnabled?: boolean;
+  navFeedbackEnabled?: boolean;
+  navDonationEnabled?: boolean;
   configs: SystemConfig[];
 }
 
@@ -248,6 +269,13 @@ export interface SystemConfigRequest {
   icpNumber?: string;
   footerText?: string;
   githubToken?: string;
+  logoType?: 'text' | 'image';
+  logoImageUrl?: string;
+  navHomeEnabled?: boolean;
+  navProjectsEnabled?: boolean;
+  navBlogsEnabled?: boolean;
+  navFeedbackEnabled?: boolean;
+  navDonationEnabled?: boolean;
 }
 
 // ==================== 用户管理相关 ====================

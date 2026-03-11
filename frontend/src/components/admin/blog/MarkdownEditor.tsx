@@ -36,7 +36,7 @@ export default function MarkdownEditor({
   disabled = false,
   onAutoSave,
   autoSaveInterval = 3000,
-  height = '500px',
+  height = '100%',
 }: MarkdownEditorProps) {
   const [activeTab, setActiveTab] = useState<'edit' | 'preview' | 'split'>('split');
   const [isSaving, setIsSaving] = useState(false);
@@ -153,9 +153,9 @@ export default function MarkdownEditor({
   };
 
   return (
-    <div className="flex flex-col rounded-lg border border-secondary-200 bg-white overflow-hidden">
+    <div className="flex flex-col rounded-lg border border-secondary-200 bg-white overflow-hidden h-full">
       {/* 工具栏 */}
-      <div className="flex items-center justify-between border-b border-secondary-200 bg-secondary-50 px-2 py-1">
+      <div className="flex-shrink-0 flex items-center justify-between border-b border-secondary-200 bg-secondary-50 px-2 py-1">
         <div className="flex items-center gap-1">
           {toolbarButtons.map((btn, index) => (
             <button
@@ -222,7 +222,7 @@ export default function MarkdownEditor({
       </div>
 
       {/* 编辑/预览区域 */}
-      <div className="flex flex-1" style={{ height }}>
+      <div className="flex flex-1 min-h-0" style={{ height }}>
         {/* 编辑区 */}
         {(activeTab === 'edit' || activeTab === 'split') && (
           <textarea
@@ -237,7 +237,7 @@ export default function MarkdownEditor({
               disabled && 'bg-secondary-50 cursor-not-allowed',
               activeTab === 'split' && 'border-r border-secondary-200'
             )}
-            style={{ width: activeTab === 'split' ? '50%' : '100%' }}
+            style={{ width: activeTab === 'split' ? '50%' : '100%', height: '100%' }}
           />
         )}
 
@@ -248,7 +248,7 @@ export default function MarkdownEditor({
               'flex-1 overflow-auto p-4 bg-white',
               activeTab === 'split' && 'border-l border-secondary-200'
             )}
-            style={{ width: activeTab === 'split' ? '50%' : '100%' }}
+            style={{ width: activeTab === 'split' ? '50%' : '100%', height: '100%' }}
           >
             {value ? (
               <div className="markdown-content prose prose-sm max-w-none">
@@ -331,7 +331,7 @@ export default function MarkdownEditor({
       </div>
 
       {/* 底部状态栏 */}
-      <div className="flex items-center justify-between border-t border-secondary-200 bg-secondary-50 px-4 py-1 text-xs text-secondary-500">
+      <div className="flex-shrink-0 flex items-center justify-between border-t border-secondary-200 bg-secondary-50 px-4 py-1 text-xs text-secondary-500">
         <span>Markdown 编辑器</span>
         <span>字数: {value.length}</span>
       </div>

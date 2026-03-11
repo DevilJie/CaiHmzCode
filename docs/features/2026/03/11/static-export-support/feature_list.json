@@ -1,0 +1,100 @@
+{
+  "featureName": "static-export-support",
+  "createdAt": "2026-03-11",
+  "status": "completed",
+  "description": "将动态路由修改为查询参数模式，支持静态HTML导出",
+  "features": [
+    {
+      "id": "F001",
+      "devType": "frontend",
+      "description": "管理端博客编辑页面路由改造",
+      "details": "将 /admin/blogs/edit/[id] 改为 /admin/blogs/edit?id=123",
+      "steps": [
+        "1. 创建新的 /admin/blogs/edit/page.tsx 页面（使用查询参数）",
+        "2. 修改页面组件从 useSearchParams 获取 id 参数",
+        "3. 处理 'new' 模式（id 为空或 'new'）",
+        "4. 删除旧的 /admin/blogs/edit/[id]/page.tsx",
+        "5. 更新所有跳转到该页面的链接"
+      ],
+      "files": [
+        "src/app/admin/blogs/edit/page.tsx",
+        "src/app/admin/blogs/edit/[id]/page.tsx (删除)",
+        "src/app/admin/blogs/page.tsx (链接更新)"
+      ],
+      "passes": true
+    },
+    {
+      "id": "F002",
+      "devType": "frontend",
+      "description": "管理端项目编辑页面路由改造",
+      "details": "将 /admin/projects/edit/[id] 改为 /admin/projects/edit?id=123",
+      "steps": [
+        "1. 创建新的 /admin/projects/edit/page.tsx 页面（使用查询参数）",
+        "2. 修改页面组件从 useSearchParams 获取 id 参数",
+        "3. 处理 'new' 模式（id 为空或 'new'）",
+        "4. 删除旧的 /admin/projects/edit/[id]/page.tsx",
+        "5. 更新所有跳转到该页面的链接"
+      ],
+      "files": [
+        "src/app/admin/projects/edit/page.tsx",
+        "src/app/admin/projects/edit/[id]/page.tsx (删除)",
+        "src/app/admin/projects/page.tsx (链接更新)"
+      ],
+      "passes": true
+    },
+    {
+      "id": "F003",
+      "devType": "frontend",
+      "description": "用户端博客详情页面路由改造",
+      "details": "将 /blogs/[id] 改为 /blogs/detail?id=123",
+      "steps": [
+        "1. 创建新的 /blogs/detail/page.tsx 页面（使用查询参数）",
+        "2. 修改页面组件从 useSearchParams 获取 id 参数",
+        "3. 添加 id 参数校验和错误处理",
+        "4. 删除旧的 /blogs/[id]/page.tsx",
+        "5. 更新所有跳转到该页面的链接（博客列表、相关博客等）"
+      ],
+      "files": [
+        "src/app/(user)/blogs/detail/page.tsx",
+        "src/app/(user)/blogs/[id]/page.tsx (删除)",
+        "src/app/(user)/blogs/page.tsx (链接更新)",
+        "首页相关博客链接"
+      ],
+      "passes": true
+    },
+    {
+      "id": "F004",
+      "devType": "frontend",
+      "description": "用户端项目详情页面路由改造",
+      "details": "将 /projects/[id] 改为 /projects/detail?id=123",
+      "steps": [
+        "1. 创建新的 /projects/detail/page.tsx 页面（使用查询参数）",
+        "2. 修改页面组件从 useSearchParams 获取 id 参数",
+        "3. 添加 id 参数校验和错误处理",
+        "4. 删除旧的 /projects/[id]/page.tsx",
+        "5. 更新所有跳转到该页面的链接"
+      ],
+      "files": [
+        "src/app/(user)/projects/detail/page.tsx",
+        "src/app/(user)/projects/[id]/page.tsx (删除)",
+        "src/app/(user)/projects/page.tsx (链接更新)",
+        "首页项目链接"
+      ],
+      "passes": true
+    },
+    {
+      "id": "F005",
+      "devType": "frontend",
+      "description": "测试和验证",
+      "details": "确保所有页面功能正常，链接跳转正确，项目构建成功",
+      "steps": [
+        "1. 启动开发服务器测试所有页面",
+        "2. 验证管理端编辑功能正常",
+        "3. 验证用户端详情页正常",
+        "4. 尝试静态导出确认可正常打包"
+      ],
+      "dependsOn": ["F001", "F002", "F003", "F004"],
+      "passes": true
+    }
+  ]
+}

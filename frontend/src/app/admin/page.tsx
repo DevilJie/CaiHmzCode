@@ -100,13 +100,13 @@ export default function AdminDashboard() {
         </h2>
         <div className="grid grid-cols-2 gap-4 md:grid-cols-4">
           <QuickAction
-            href="/admin/projects/edit/new"
+            href="/admin/projects/edit"
             icon="plus"
             label="新建项目"
             color="primary"
           />
           <QuickAction
-            href="/admin/blogs/edit/new"
+            href="/admin/blogs/edit"
             icon="edit"
             label="撰写博客"
             color="success"

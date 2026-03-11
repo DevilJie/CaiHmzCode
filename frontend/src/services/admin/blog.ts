@@ -141,11 +141,26 @@ export const adminBlogService = {
 // ==================== 分类管理API ====================
 
 /**
+ * 分类树节点
+ */
+export interface CategoryTreeNode {
+  id: number;
+  name: string;
+  parentId: number | null;
+  level: number;
+  sortOrder: number;
+  blogCount: number;
+  isLeaf: boolean;
+  children: CategoryTreeNode[];
+}
+
+/**
  * 创建/更新分类请求
  */
 export interface CategoryRequest {
   name: string;
   sortOrder?: number;
+  parentId?: number | null;
 }
 
 /**
@@ -165,6 +180,36 @@ export const adminCategoryService = {
     }
 
     throw new Error(response.message || '获取分类列表失败');
+  },
+
+  /**
+   * 获取分类树
+   */
+  async getCategoryTree(): Promise<CategoryTreeNode[]> {
+    const response = (await apiClient.get(
+      '/admin/blog-categories/tree'
+    )) as ApiResponse<CategoryTreeNode[]>;
+
+    if (response.code === 200 && response.data) {
+      return response.data;
+    }
+
+    throw new Error(response.message || '获取分类树失败');
+  },
+
+  /**
+   * 获取末级分类（用于博客关联）
+   */
+  async getLeafCategories(): Promise<BlogCategory[]> {
+    const response = (await apiClient.get(
+      '/admin/blog-categories/leaves'
+    )) as ApiResponse<BlogCategory[]>;
+
+    if (response.code === 200 && response.data) {
+      return response.data;
+    }
+
+    throw new Error(response.message || '获取末级分类失败');
   },
 
   /**

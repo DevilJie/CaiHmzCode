@@ -28,7 +28,7 @@ public class SystemConfigService {
     private final SystemConfigMapper systemConfigMapper;
 
     /**
-     * 配置键常量
+     * 配置键常量 - 基础配置
      */
     private static final String KEY_SITE_NAME = "SITE_NAME";
     private static final String KEY_ICP_NUMBER = "ICP_NUMBER";
@@ -36,15 +36,47 @@ public class SystemConfigService {
     private static final String KEY_GITHUB_TOKEN = "GITHUB_TOKEN";
 
     /**
+     * 配置键常量 - Logo配置
+     */
+    private static final String KEY_LOGO_TYPE = "LOGO_TYPE";
+    private static final String KEY_LOGO_IMAGE_URL = "LOGO_IMAGE_URL";
+
+    /**
+     * 配置键常量 - 功能开关
+     */
+    private static final String KEY_DONATION_ENABLED = "DONATION_ENABLED";
+
+    /**
+     * 配置键常量 - 导航配置
+     */
+    private static final String KEY_NAV_HOME_ENABLED = "NAV_HOME_ENABLED";
+    private static final String KEY_NAV_PROJECTS_ENABLED = "NAV_PROJECTS_ENABLED";
+    private static final String KEY_NAV_BLOGS_ENABLED = "NAV_BLOGS_ENABLED";
+    private static final String KEY_NAV_FEEDBACK_ENABLED = "NAV_FEEDBACK_ENABLED";
+    private static final String KEY_NAV_DONATION_ENABLED = "NAV_DONATION_ENABLED";
+
+    /**
      * 获取网站信息（用户端）
      *
      * @return 网站信息
      */
     public SiteInfoResponse getSiteInfo() {
+        // 构建导航配置
+        SiteInfoResponse.NavConfig navConfig = SiteInfoResponse.NavConfig.builder()
+                .home(getBooleanConfigValue(KEY_NAV_HOME_ENABLED, true))
+                .projects(getBooleanConfigValue(KEY_NAV_PROJECTS_ENABLED, true))
+                .blogs(getBooleanConfigValue(KEY_NAV_BLOGS_ENABLED, true))
+                .feedback(getBooleanConfigValue(KEY_NAV_FEEDBACK_ENABLED, true))
+                .donation(getBooleanConfigValue(KEY_NAV_DONATION_ENABLED, true))
+                .build();
+
         return SiteInfoResponse.builder()
                 .siteName(getConfigValue(KEY_SITE_NAME))
                 .icpNumber(getConfigValue(KEY_ICP_NUMBER))
                 .footerText(getConfigValue(KEY_FOOTER_TEXT))
+                .logoType(getConfigValue(KEY_LOGO_TYPE, "text"))
+                .logoImageUrl(getConfigValue(KEY_LOGO_IMAGE_URL))
+                .navConfig(navConfig)
                 .build();
     }
 
@@ -75,6 +107,13 @@ public class SystemConfigService {
                 .icpNumber(getConfigValue(KEY_ICP_NUMBER))
                 .footerText(getConfigValue(KEY_FOOTER_TEXT))
                 .githubToken(getConfigValue(KEY_GITHUB_TOKEN))
+                .logoType(getConfigValue(KEY_LOGO_TYPE, "text"))
+                .logoImageUrl(getConfigValue(KEY_LOGO_IMAGE_URL))
+                .navHomeEnabled(getBooleanConfigValue(KEY_NAV_HOME_ENABLED, true))
+                .navProjectsEnabled(getBooleanConfigValue(KEY_NAV_PROJECTS_ENABLED, true))
+                .navBlogsEnabled(getBooleanConfigValue(KEY_NAV_BLOGS_ENABLED, true))
+                .navFeedbackEnabled(getBooleanConfigValue(KEY_NAV_FEEDBACK_ENABLED, true))
+                .navDonationEnabled(getBooleanConfigValue(KEY_NAV_DONATION_ENABLED, true))
                 .configs(configItems)
                 .build();
     }
@@ -87,14 +126,24 @@ public class SystemConfigService {
      */
     @Transactional(rollbackFor = Exception.class)
     public SystemConfigResponse updateSystemConfigs(SystemConfigRequest request) {
-        // 更新各项配置
+        // 更新基础配置
         updateConfigValue(KEY_SITE_NAME, request.getSiteName());
         updateConfigValue(KEY_ICP_NUMBER, request.getIcpNumber());
         updateConfigValue(KEY_FOOTER_TEXT, request.getFooterText());
         updateConfigValue(KEY_GITHUB_TOKEN, request.getGithubToken());
 
-        log.info("系统配置更新成功");
+        // 更新Logo配置
+        updateConfigValue(KEY_LOGO_TYPE, request.getLogoType());
+        updateConfigValue(KEY_LOGO_IMAGE_URL, request.getLogoImageUrl());
 
+        // 更新导航配置
+        updateBooleanConfigValue(KEY_NAV_HOME_ENABLED, request.getNavHomeEnabled());
+        updateBooleanConfigValue(KEY_NAV_PROJECTS_ENABLED, request.getNavProjectsEnabled());
+        updateBooleanConfigValue(KEY_NAV_BLOGS_ENABLED, request.getNavBlogsEnabled());
+        updateBooleanConfigValue(KEY_NAV_FEEDBACK_ENABLED, request.getNavFeedbackEnabled());
+        updateBooleanConfigValue(KEY_NAV_DONATION_ENABLED, request.getNavDonationEnabled());
+
+        // 返回更新后的配置
         return getSystemConfigs();
     }
 
@@ -105,15 +154,44 @@ public class SystemConfigService {
      * @return 配置值，不存在返回空字符串
      */
     public String getConfigValue(String key) {
+        return getConfigValue(key, "");
+    }
+
+    /**
+     * 获取单个配置值（带默认值）
+     *
+     * @param key          配置键
+     * @param defaultValue 默认值
+     * @return 配置值，不存在返回默认值
+     */
+    public String getConfigValue(String key, String defaultValue) {
         SystemConfig config = systemConfigMapper.selectOne(
                 new LambdaQueryWrapper<SystemConfig>()
                         .eq(SystemConfig::getConfigKey, key)
         );
-        return config != null ? config.getConfigValue() : "";
+        if (config == null || config.getConfigValue() == null || config.getConfigValue().isBlank()) {
+            return defaultValue;
+        }
+        return config.getConfigValue();
     }
 
     /**
-     * 更新单个配置值
+     * 获取布尔类型配置值
+     *
+     * @param key          配置键
+     * @param defaultValue 默认值
+     * @return 布尔配置值
+     */
+    public Boolean getBooleanConfigValue(String key, Boolean defaultValue) {
+        String value = getConfigValue(key);
+        if (value == null || value.isBlank()) {
+            return defaultValue;
+        }
+        return Boolean.parseBoolean(value);
+    }
+
+    /**
+     * 更新单个配置值（如果不存在则插入）
      *
      * @param key   配置键
      * @param value 配置值
@@ -122,10 +200,78 @@ public class SystemConfigService {
         if (value == null) {
             value = "";
         }
-        systemConfigMapper.update(null, new LambdaUpdateWrapper<SystemConfig>()
-                .eq(SystemConfig::getConfigKey, key)
-                .set(SystemConfig::getConfigValue, value)
+        // 先查询是否存在
+        SystemConfig existingConfig = systemConfigMapper.selectOne(
+                new LambdaQueryWrapper<SystemConfig>()
+                        .eq(SystemConfig::getConfigKey, key)
         );
+
+        if (existingConfig != null) {
+            // 存在则更新
+            systemConfigMapper.update(null, new LambdaUpdateWrapper<SystemConfig>()
+                    .eq(SystemConfig::getConfigKey, key)
+                    .set(SystemConfig::getConfigValue, value)
+            );
+        } else {
+            // 不存在则插入
+            SystemConfig newConfig = new SystemConfig();
+            newConfig.setConfigKey(key);
+            newConfig.setConfigValue(value);
+            newConfig.setConfigName(keyToName(key));
+            newConfig.setDescription(keyToDescription(key));
+            systemConfigMapper.insert(newConfig);
+        }
+    }
+
+    /**
+     * 配置键转换为配置名称
+     */
+    private String keyToName(String key) {
+        return switch (key) {
+            case "SITE_NAME" -> "网站名称";
+            case "ICP_NUMBER" -> "ICP备案号";
+            case "FOOTER_TEXT" -> "页脚文字";
+            case "GITHUB_TOKEN" -> "GitHub Token";
+            case "LOGO_TYPE" -> "Logo类型";
+            case "LOGO_IMAGE_URL" -> "Logo图片URL";
+            case "NAV_HOME_ENABLED" -> "首页导航开关";
+            case "NAV_PROJECTS_ENABLED" -> "项目导航开关";
+            case "NAV_BLOGS_ENABLED" -> "博客导航开关";
+            case "NAV_FEEDBACK_ENABLED" -> "反馈导航开关";
+            case "NAV_DONATION_ENABLED" -> "打赏导航开关";
+            default -> key;
+        };
+    }
+
+    /**
+     * 配置键转换为描述
+     */
+    private String keyToDescription(String key) {
+        return switch (key) {
+            case "SITE_NAME" -> "网站显示名称";
+            case "ICP_NUMBER" -> "ICP备案号，显示在页脚";
+            case "FOOTER_TEXT" -> "页脚显示的文字";
+            case "GITHUB_TOKEN" -> "用于获取GitHub README的Token";
+            case "LOGO_TYPE" -> "Logo类型：text或image";
+            case "LOGO_IMAGE_URL" -> "Logo图片的URL地址";
+            case "NAV_HOME_ENABLED" -> "是否在导航栏显示首页链接";
+            case "NAV_PROJECTS_ENABLED" -> "是否在导航栏显示项目链接";
+            case "NAV_BLOGS_ENABLED" -> "是否在导航栏显示博客链接";
+            case "NAV_FEEDBACK_ENABLED" -> "是否在导航栏显示反馈链接";
+            case "NAV_DONATION_ENABLED" -> "是否在导航栏显示打赏链接";
+            default -> key;
+        };
+    }
+
+    /**
+     * 更新布尔类型配置值
+     *
+     * @param key   配置键
+     * @param value 布尔值
+     */
+    private void updateBooleanConfigValue(String key, Boolean value) {
+        String strValue = (value != null) ? String.valueOf(value) : "false";
+        updateConfigValue(key, strValue);
     }
 
 }

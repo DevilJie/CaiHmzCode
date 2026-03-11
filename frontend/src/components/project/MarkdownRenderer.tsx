@@ -30,7 +30,7 @@ export default function MarkdownRenderer({
               href={href}
               target="_blank"
               rel="noopener noreferrer"
-              className="text-primary-500 hover:underline"
+              className="text-primary-500 dark:text-primary-400 hover:underline"
             >
               {children}
             </a>
@@ -46,7 +46,7 @@ export default function MarkdownRenderer({
           ),
           // 自定义代码块渲染
           pre: ({ children }) => (
-            <pre className="bg-secondary-900 text-secondary-100 p-4 rounded-lg overflow-x-auto mb-4">
+            <pre className="bg-secondary-900 dark:bg-dark-900 text-secondary-100 dark:text-dark-100 p-4 rounded-lg overflow-x-auto mb-4">
               {children}
             </pre>
           ),
@@ -56,7 +56,7 @@ export default function MarkdownRenderer({
             if (isInline) {
               return (
                 <code
-                  className="bg-secondary-100 text-secondary-800 px-1.5 py-0.5 rounded text-sm"
+                  className="bg-secondary-100 dark:bg-dark-700 text-secondary-800 dark:text-dark-200 px-1.5 py-0.5 rounded text-sm"
                   {...props}
                 >
                   {children}
@@ -77,52 +77,52 @@ export default function MarkdownRenderer({
           ),
           // 自定义表头单元格
           th: ({ children }) => (
-            <th className="border border-secondary-200 px-4 py-2 bg-secondary-50 font-semibold text-left">
+            <th className="border border-secondary-200 dark:border-dark-600 px-4 py-2 bg-secondary-50 dark:bg-dark-700 font-semibold text-left text-secondary-900 dark:text-dark-100">
               {children}
             </th>
           ),
           // 自定义表格单元格
           td: ({ children }) => (
-            <td className="border border-secondary-200 px-4 py-2">{children}</td>
+            <td className="border border-secondary-200 dark:border-dark-600 px-4 py-2 text-secondary-800 dark:text-dark-200">{children}</td>
           ),
           // 自定义引用块
           blockquote: ({ children }) => (
-            <blockquote className="border-l-4 border-primary-500 pl-4 italic text-secondary-600 my-4">
+            <blockquote className="border-l-4 border-primary-500 dark:border-primary-400 pl-4 italic text-secondary-600 dark:text-dark-400 my-4">
               {children}
             </blockquote>
           ),
           // 自定义标题
           h1: ({ children }) => (
-            <h1 className="text-3xl font-bold mb-4 mt-8 text-secondary-900">
+            <h1 className="text-3xl font-bold mb-4 mt-8 text-secondary-900 dark:text-dark-100">
               {children}
             </h1>
           ),
           h2: ({ children }) => (
-            <h2 className="text-2xl font-bold mb-3 mt-6 text-secondary-900">
+            <h2 className="text-2xl font-bold mb-3 mt-6 text-secondary-900 dark:text-dark-100">
               {children}
             </h2>
           ),
           h3: ({ children }) => (
-            <h3 className="text-xl font-bold mb-2 mt-4 text-secondary-900">
+            <h3 className="text-xl font-bold mb-2 mt-4 text-secondary-900 dark:text-dark-100">
               {children}
             </h3>
           ),
           h4: ({ children }) => (
-            <h4 className="text-lg font-bold mb-2 mt-3 text-secondary-900">
+            <h4 className="text-lg font-bold mb-2 mt-3 text-secondary-900 dark:text-dark-100">
               {children}
             </h4>
           ),
           // 自定义列表
           ul: ({ children }) => (
-            <ul className="list-disc list-inside mb-4 space-y-1">{children}</ul>
+            <ul className="list-disc list-inside mb-4 space-y-1 text-secondary-800 dark:text-dark-200">{children}</ul>
           ),
           ol: ({ children }) => (
-            <ol className="list-decimal list-inside mb-4 space-y-1">{children}</ol>
+            <ol className="list-decimal list-inside mb-4 space-y-1 text-secondary-800 dark:text-dark-200">{children}</ol>
           ),
           // 自定义段落
-          p: ({ children }) => <p className="mb-4 leading-relaxed">{children}</p>,
+          p: ({ children }) => <p className="mb-4 leading-relaxed text-secondary-800 dark:text-dark-200">{children}</p>,
           // 自定义水平线
-          hr: () => <hr className="my-6 border-secondary-200" />,
+          hr: () => <hr className="my-6 border-secondary-200 dark:border-dark-700" />,
         }}
       >
         {content}

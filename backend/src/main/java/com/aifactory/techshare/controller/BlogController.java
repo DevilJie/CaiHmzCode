@@ -5,6 +5,7 @@ import com.aifactory.techshare.common.Result;
 import com.aifactory.techshare.dto.BlogDetailResponse;
 import com.aifactory.techshare.dto.BlogResponse;
 import com.aifactory.techshare.dto.CategoryResponse;
+import com.aifactory.techshare.dto.CategoryTreeResponse;
 import com.aifactory.techshare.dto.TagResponse;
 import com.aifactory.techshare.service.BlogCategoryService;
 import com.aifactory.techshare.service.BlogService;
@@ -122,6 +123,20 @@ public class BlogController {
         log.info("获取分类列表");
         List<CategoryResponse> categories = categoryService.getAllCategories();
         return Result.success(categories);
+    }
+
+    /**
+     * 获取分类树
+     *
+     * @return 分类树列表
+     */
+    @GetMapping("/blog-categories/tree")
+    @Operation(summary = "获取博客分类树", description = "获取树形结构的博客分类")
+    @ApiResponse(responseCode = "200", description = "查询成功")
+    public Result<List<CategoryTreeResponse>> getCategoryTree() {
+        log.info("获取分类树");
+        List<CategoryTreeResponse> tree = categoryService.getCategoryTree();
+        return Result.success(tree);
     }
 
     /**

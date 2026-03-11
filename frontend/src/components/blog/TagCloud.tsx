@@ -3,9 +3,6 @@
 import { BlogTag } from '@/types';
 import clsx from 'clsx';
 
-/**
- * 标签云组件 Props
- */
 interface TagCloudProps {
   tags: BlogTag[];
   selectedId?: number;
@@ -13,16 +10,13 @@ interface TagCloudProps {
   loading?: boolean;
 }
 
-/**
- * 标签云骨架屏
- */
 function TagSkeleton() {
   return (
     <div className="flex flex-wrap gap-2">
       {Array.from({ length: 8 }).map((_, index) => (
         <div
           key={index}
-          className="h-7 w-16 bg-secondary-200 rounded-full animate-pulse"
+          className="h-8 w-16 bg-slate-100 dark:bg-dark-700 rounded-full animate-pulse"
         />
       ))}
     </div>
@@ -30,29 +24,26 @@ function TagSkeleton() {
 }
 
 /**
- * 标签颜色数组
+ * 标签样式配置 - 柔和的渐变色彩（支持暗色模式）
  */
-const TAG_VARIANTS = [
-  { bg: 'bg-blue-50', text: 'text-blue-600', border: 'border-blue-200', activeBg: 'bg-blue-500', activeText: 'text-white' },
-  { bg: 'bg-green-50', text: 'text-green-600', border: 'border-green-200', activeBg: 'bg-green-500', activeText: 'text-white' },
-  { bg: 'bg-purple-50', text: 'text-purple-600', border: 'border-purple-200', activeBg: 'bg-purple-500', activeText: 'text-white' },
-  { bg: 'bg-orange-50', text: 'text-orange-600', border: 'border-orange-200', activeBg: 'bg-orange-500', activeText: 'text-white' },
-  { bg: 'bg-pink-50', text: 'text-pink-600', border: 'border-pink-200', activeBg: 'bg-pink-500', activeText: 'text-white' },
-  { bg: 'bg-cyan-50', text: 'text-cyan-600', border: 'border-cyan-200', activeBg: 'bg-cyan-500', activeText: 'text-white' },
-  { bg: 'bg-amber-50', text: 'text-amber-600', border: 'border-amber-200', activeBg: 'bg-amber-500', activeText: 'text-white' },
-  { bg: 'bg-rose-50', text: 'text-rose-600', border: 'border-rose-200', activeBg: 'bg-rose-500', activeText: 'text-white' },
+const TAG_STYLES = [
+  { gradient: 'from-violet-500 to-purple-500', inactive: 'bg-violet-50 dark:bg-violet-900/30 text-violet-600 dark:text-violet-400 border-violet-200 dark:border-violet-800' },
+  { gradient: 'from-blue-500 to-cyan-500', inactive: 'bg-blue-50 dark:bg-blue-900/30 text-blue-600 dark:text-blue-400 border-blue-200 dark:border-blue-800' },
+  { gradient: 'from-emerald-500 to-teal-500', inactive: 'bg-emerald-50 dark:bg-emerald-900/30 text-emerald-600 dark:text-emerald-400 border-emerald-200 dark:border-emerald-800' },
+  { gradient: 'from-amber-500 to-orange-500', inactive: 'bg-amber-50 dark:bg-amber-900/30 text-amber-600 dark:text-amber-400 border-amber-200 dark:border-amber-800' },
+  { gradient: 'from-rose-500 to-pink-500', inactive: 'bg-rose-50 dark:bg-rose-900/30 text-rose-600 dark:text-rose-400 border-rose-200 dark:border-rose-800' },
+  { gradient: 'from-indigo-500 to-blue-500', inactive: 'bg-indigo-50 dark:bg-indigo-900/30 text-indigo-600 dark:text-indigo-400 border-indigo-200 dark:border-indigo-800' },
+  { gradient: 'from-cyan-500 to-sky-500', inactive: 'bg-cyan-50 dark:bg-cyan-900/30 text-cyan-600 dark:text-cyan-400 border-cyan-200 dark:border-cyan-800' },
+  { gradient: 'from-fuchsia-500 to-pink-500', inactive: 'bg-fuchsia-50 dark:bg-fuchsia-900/30 text-fuchsia-600 dark:text-fuchsia-400 border-fuchsia-200 dark:border-fuchsia-800' },
 ];
 
-/**
- * 获取标签样式
- */
-function getTagVariant(index: number) {
-  return TAG_VARIANTS[index % TAG_VARIANTS.length];
+function getTagStyle(index: number) {
+  return TAG_STYLES[index % TAG_STYLES.length];
 }
 
 /**
  * 标签云组件
- * 展示标签列表，支持单选
+ * 彩色胶囊标签设计
  */
 export default function TagCloud({
   tags,
@@ -60,25 +51,14 @@ export default function TagCloud({
   onSelect,
   loading = false,
 }: TagCloudProps) {
-  // 加载状态
   if (loading) {
     return (
-      <div className="bg-white rounded-xl shadow-card p-4">
-        <h3 className="text-lg font-semibold text-secondary-900 mb-4 flex items-center gap-2">
-          <svg
-            className="w-5 h-5"
-            fill="none"
-            stroke="currentColor"
-            viewBox="0 0 24 24"
-          >
-            <path
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              strokeWidth={2}
-              d="M7 7h.01M7 3h5c.512 0 1.024.195 1.414.586l7 7a2 2 0 010 2.828l-7 7a2 2 0 01-2.828 0l-7-7A1.994 1.994 0 013 12V7a4 4 0 014-4z"
-            />
+      <div className="bg-white/80 dark:bg-dark-800/80 backdrop-blur-sm rounded-2xl border border-slate-200/50 dark:border-dark-700/50 p-5 shadow-lg shadow-slate-200/50 dark:shadow-dark-900/20">
+        <h3 className="text-sm font-bold text-slate-800 dark:text-dark-100 mb-4 flex items-center gap-2 uppercase tracking-wider">
+          <svg className="w-4 h-4 text-slate-500 dark:text-dark-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M7 7h.01M7 3h5c.512 0 1.024.195 1.414.586l7 7a2 2 0 010 2.828l-7 7a2 2 0 01-2.828 0l-7-7A1.994 1.994 0 013 12V7a4 4 0 014-4z" />
           </svg>
-          标签
+          热门标签
         </h3>
         <TagSkeleton />
       </div>
@@ -86,22 +66,12 @@ export default function TagCloud({
   }
 
   return (
-    <div className="bg-white rounded-xl shadow-card p-4">
-      <h3 className="text-lg font-semibold text-secondary-900 mb-4 flex items-center gap-2">
-        <svg
-          className="w-5 h-5"
-          fill="none"
-          stroke="currentColor"
-          viewBox="0 0 24 24"
-        >
-          <path
-            strokeLinecap="round"
-            strokeLinejoin="round"
-            strokeWidth={2}
-            d="M7 7h.01M7 3h5c.512 0 1.024.195 1.414.586l7 7a2 2 0 010 2.828l-7 7a2 2 0 01-2.828 0l-7-7A1.994 1.994 0 013 12V7a4 4 0 014-4z"
-          />
+    <div className="bg-white/80 dark:bg-dark-800/80 backdrop-blur-sm rounded-2xl border border-slate-200/50 dark:border-dark-700/50 p-5 shadow-lg shadow-slate-200/50 dark:shadow-dark-900/20">
+      <h3 className="text-sm font-bold text-slate-800 dark:text-dark-100 mb-4 flex items-center gap-2 uppercase tracking-wider">
+        <svg className="w-4 h-4 text-slate-500 dark:text-dark-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M7 7h.01M7 3h5c.512 0 1.024.195 1.414.586l7 7a2 2 0 010 2.828l-7 7a2 2 0 01-2.828 0l-7-7A1.994 1.994 0 013 12V7a4 4 0 014-4z" />
         </svg>
-        标签
+        热门标签
       </h3>
 
       <div className="flex flex-wrap gap-2">
@@ -109,10 +79,10 @@ export default function TagCloud({
         <button
           onClick={() => onSelect(undefined)}
           className={clsx(
-            'px-3 py-1.5 rounded-full text-sm transition-all border',
+            'px-3 py-1.5 rounded-full text-sm font-medium transition-all duration-300',
             selectedId === undefined
-              ? 'bg-primary-500 text-white border-primary-500'
-              : 'bg-secondary-50 text-secondary-600 border-secondary-200 hover:border-primary-300 hover:text-primary-600'
+              ? 'bg-slate-800 dark:bg-dark-600 text-white shadow-lg'
+              : 'bg-slate-100 dark:bg-dark-700 text-slate-600 dark:text-dark-300 hover:bg-slate-200 dark:hover:bg-dark-600'
           )}
         >
           全部
@@ -120,7 +90,7 @@ export default function TagCloud({
 
         {/* 标签列表 */}
         {tags.map((tag, index) => {
-          const variant = getTagVariant(index);
+          const style = getTagStyle(index);
           const isActive = selectedId === tag.id;
 
           return (
@@ -128,10 +98,10 @@ export default function TagCloud({
               key={tag.id}
               onClick={() => onSelect(tag.id)}
               className={clsx(
-                'px-3 py-1.5 rounded-full text-sm transition-all border',
+                'px-3 py-1.5 rounded-full text-sm font-medium transition-all duration-300 border',
                 isActive
-                  ? `${variant.activeBg} ${variant.activeText} border-transparent`
-                  : `${variant.bg} ${variant.text} ${variant.border} hover:shadow-sm`
+                  ? `bg-gradient-to-r ${style.gradient} text-white shadow-lg border-transparent`
+                  : `${style.inactive} hover:shadow-md hover:-translate-y-0.5`
               )}
             >
               {tag.name}
@@ -142,9 +112,14 @@ export default function TagCloud({
 
       {/* 空状态 */}
       {tags.length === 0 && (
-        <p className="text-secondary-400 text-sm text-center py-4">
-          暂无标签
-        </p>
+        <div className="py-8 text-center">
+          <div className="w-12 h-12 mx-auto mb-3 bg-slate-100 dark:bg-dark-700 rounded-xl flex items-center justify-center">
+            <svg className="w-6 h-6 text-slate-400 dark:text-dark-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M7 7h.01M7 3h5c.512 0 1.024.195 1.414.586l7 7a2 2 0 010 2.828l-7 7a2 2 0 01-2.828 0l-7-7A1.994 1.994 0 013 12V7a4 4 0 014-4z" />
+            </svg>
+          </div>
+          <p className="text-slate-400 dark:text-dark-500 text-sm">暂无标签</p>
+        </div>
       )}
     </div>
   );

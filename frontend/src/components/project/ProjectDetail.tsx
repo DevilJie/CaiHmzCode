@@ -17,12 +17,12 @@ interface ProjectDetailProps {
  * 技术标签颜色映射
  */
 const TAG_COLORS = [
-  'bg-blue-100 text-blue-700',
-  'bg-green-100 text-green-700',
-  'bg-purple-100 text-purple-700',
-  'bg-orange-100 text-orange-700',
-  'bg-pink-100 text-pink-700',
-  'bg-cyan-100 text-cyan-700',
+  'bg-blue-100 text-blue-700 dark:bg-blue-900/50 dark:text-blue-300',
+  'bg-green-100 text-green-700 dark:bg-green-900/50 dark:text-green-300',
+  'bg-purple-100 text-purple-700 dark:bg-purple-900/50 dark:text-purple-300',
+  'bg-orange-100 text-orange-700 dark:bg-orange-900/50 dark:text-orange-300',
+  'bg-pink-100 text-pink-700 dark:bg-pink-900/50 dark:text-pink-300',
+  'bg-cyan-100 text-cyan-700 dark:bg-cyan-900/50 dark:text-cyan-300',
 ];
 
 /**
@@ -57,7 +57,7 @@ export default function ProjectDetail({ project }: ProjectDetailProps) {
   return (
     <article className="max-w-4xl mx-auto">
       {/* 全宽封面图 */}
-      <div className="relative w-full aspect-video md:aspect-[21/9] rounded-xl overflow-hidden bg-secondary-100 mb-6">
+      <div className="relative w-full aspect-video md:aspect-[21/9] rounded-xl overflow-hidden bg-secondary-100 dark:bg-dark-700 mb-6">
         {coverImage ? (
           <Image
             src={coverImage}
@@ -70,7 +70,7 @@ export default function ProjectDetail({ project }: ProjectDetailProps) {
         ) : (
           <div className="absolute inset-0 flex items-center justify-center">
             <svg
-              className="w-24 h-24 text-secondary-300"
+              className="w-24 h-24 text-secondary-300 dark:text-dark-500"
               fill="none"
               stroke="currentColor"
               viewBox="0 0 24 24"
@@ -87,7 +87,7 @@ export default function ProjectDetail({ project }: ProjectDetailProps) {
       </div>
 
       {/* 项目标题 */}
-      <h1 className="text-3xl md:text-4xl font-bold text-secondary-900 mb-4">
+      <h1 className="text-3xl md:text-4xl font-bold text-secondary-900 dark:text-dark-100 mb-4">
         {name}
       </h1>
 
@@ -107,15 +107,15 @@ export default function ProjectDetail({ project }: ProjectDetailProps) {
 
       {/* 项目简介 */}
       {description && (
-        <p className="text-lg text-secondary-600 mb-6 leading-relaxed">
+        <p className="text-lg text-secondary-600 dark:text-dark-300 mb-6 leading-relaxed">
           {description}
         </p>
       )}
 
       {/* 统计信息和操作按钮 */}
-      <div className="flex flex-wrap items-center gap-4 mb-8 pb-6 border-b border-secondary-200">
+      <div className="flex flex-wrap items-center gap-4 mb-8 pb-6 border-b border-secondary-200 dark:border-dark-700">
         {/* 浏览次数 */}
-        <div className="flex items-center gap-2 text-secondary-500">
+        <div className="flex items-center gap-2 text-secondary-500 dark:text-dark-400">
           <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path
               strokeLinecap="round"
@@ -173,7 +173,7 @@ export default function ProjectDetail({ project }: ProjectDetailProps) {
       {/* README内容 */}
       {readmeContent && (
         <section className="mb-8">
-          <h2 className="text-xl font-semibold text-secondary-900 mb-4 flex items-center gap-2">
+          <h2 className="text-xl font-semibold text-secondary-900 dark:text-dark-100 mb-4 flex items-center gap-2">
             <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path
                 strokeLinecap="round"
@@ -184,7 +184,7 @@ export default function ProjectDetail({ project }: ProjectDetailProps) {
             </svg>
             项目文档
           </h2>
-          <div className="bg-white rounded-xl shadow-card p-6">
+          <div className="bg-white dark:bg-dark-800 rounded-xl shadow-card dark:shadow-dark-900/30 p-6">
             <MarkdownRenderer content={readmeContent} />
           </div>
         </section>

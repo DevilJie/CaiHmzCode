@@ -6,8 +6,8 @@ import { useToast } from '@/contexts/ToastContext';
 import {
   adminCategoryService,
   CategoryRequest,
+  CategoryTreeNode,
 } from '@/services/admin/blog';
-import { BlogCategory } from '@/types';
 
 /**
  * 分类管理组件 Props
@@ -21,7 +21,7 @@ interface CategoryManagerProps {
 
 /**
  * 分类管理组件
- * 弹窗形式展示，支持增删改查
+ * 弹窗形式展示，支持多级分类
  */
 export default function CategoryManager({
   onClose,
@@ -30,21 +30,36 @@ export default function CategoryManager({
   const { showSuccess, showError } = useToast();
 
   // 列表数据
-  const [categories, setCategories] = useState<BlogCategory[]>([]);
+  const [categories, setCategories] = useState<CategoryTreeNode[]>([]);
+  const [flatCategories, setFlatCategories] = useState<CategoryTreeNode[]>([]);
   const [loading, setLoading] = useState(true);
 
   // 表单状态
   const [editingId, setEditingId] = useState<number | null>(null);
   const [formName, setFormName] = useState('');
   const [formSortOrder, setFormSortOrder] = useState(0);
+  const [formParentId, setFormParentId] = useState<number | null>(null);
   const [saving, setSaving] = useState(false);
 
-  // 加载分类列表
+  // 扁平化分类树（用于显示）
+  const flattenTree = (nodes: CategoryTreeNode[], level = 0): CategoryTreeNode[] => {
+    const result: CategoryTreeNode[] = [];
+    nodes.forEach((node) => {
+      result.push({ ...node, level });
+      if (node.children && node.children.length > 0) {
+        result.push(...flattenTree(node.children, level + 1));
+      }
+    });
+    return result;
+  };
+
+  // 加载分类树
   const loadCategories = async () => {
     setLoading(true);
     try {
-      const data = await adminCategoryService.getCategories();
+      const data = await adminCategoryService.getCategoryTree();
       setCategories(data || []);
+      setFlatCategories(flattenTree(data || []));
     } catch {
       showError('加载分类列表失败');
     } finally {
@@ -56,11 +71,46 @@ export default function CategoryManager({
     loadCategories();
   }, []);
 
+  // 获取可选的父分类列表（排除自己和子孙）
+  const getParentOptions = (): CategoryTreeNode[] => {
+    if (!editingId) {
+      return flatCategories;
+    }
+    // 排除自己及其子孙
+    const excludeIds = new Set<number>();
+    const collectDescendants = (id: number) => {
+      excludeIds.add(id);
+      const findNode = (nodes: CategoryTreeNode[]): CategoryTreeNode | null => {
+        for (const node of nodes) {
+          if (node.id === id) return node;
+          if (node.children) {
+            const found = findNode(node.children);
+            if (found) return found;
+          }
+        }
+        return null;
+      };
+      const node = findNode(categories);
+      if (node?.children) {
+        const collectChildren = (children: CategoryTreeNode[]) => {
+          children.forEach((child) => {
+            excludeIds.add(child.id);
+            if (child.children) collectChildren(child.children);
+          });
+        };
+        collectChildren(node.children);
+      }
+    };
+    collectDescendants(editingId);
+    return flatCategories.filter((c) => !excludeIds.has(c.id));
+  };
+
   // 开始编辑
-  const handleEdit = (category: BlogCategory) => {
+  const handleEdit = (category: CategoryTreeNode) => {
     setEditingId(category.id);
     setFormName(category.name);
     setFormSortOrder(category.sortOrder || 0);
+    setFormParentId(category.parentId);
   };
 
   // 取消编辑
@@ -68,6 +118,7 @@ export default function CategoryManager({
     setEditingId(null);
     setFormName('');
     setFormSortOrder(0);
+    setFormParentId(null);
   };
 
   // 保存分类
@@ -82,6 +133,7 @@ export default function CategoryManager({
       const data: CategoryRequest = {
         name: formName.trim(),
         sortOrder: formSortOrder,
+        parentId: formParentId,
       };
 
       if (editingId) {
@@ -103,7 +155,11 @@ export default function CategoryManager({
   };
 
   // 删除分类
-  const handleDelete = async (id: number, name: string) => {
+  const handleDelete = async (id: number, name: string, hasChildren: boolean) => {
+    if (hasChildren) {
+      showError('该分类下有子分类，请先删除子分类');
+      return;
+    }
     if (!confirm(`确定要删除分类「${name}」吗？`)) {
       return;
     }
@@ -116,6 +172,57 @@ export default function CategoryManager({
     } catch {
       showError('删除失败，可能该分类下还有博客');
     }
+  };
+
+  // 渲染分类项
+  const renderCategoryItem = (category: CategoryTreeNode) => {
+    const indent = (category.level || 0) * 24;
+    const isEditing = editingId === category.id;
+
+    return (
+      <li
+        key={category.id}
+        className={clsx(
+          'flex items-center justify-between px-6 py-3 hover:bg-secondary-50',
+          isEditing && 'bg-primary-50'
+        )}
+      >
+        <div className="flex items-center gap-3" style={{ paddingLeft: indent }}>
+          {category.level > 0 && (
+            <span className="text-secondary-300">└</span>
+          )}
+          <span className="text-sm font-medium text-secondary-800">
+            {category.name}
+          </span>
+          {category.isLeaf && (
+            <span className="px-1.5 py-0.5 text-xs bg-green-100 text-green-600 rounded">
+              末级
+            </span>
+          )}
+          <span className="text-xs text-secondary-400">
+            排序: {category.sortOrder || 0}
+          </span>
+        </div>
+        <div className="flex items-center gap-2">
+          <button
+            onClick={() => handleEdit(category)}
+            className="text-primary-500 hover:text-primary-700 text-sm"
+          >
+            编辑
+          </button>
+          <button
+            onClick={() => handleDelete(category.id, category.name, !category.isLeaf)}
+            className={clsx(
+              'text-sm',
+              !category.isLeaf ? 'text-secondary-300 cursor-not-allowed' : 'text-red-500 hover:text-red-700'
+            )}
+            disabled={!category.isLeaf}
+          >
+            删除
+          </button>
+        </div>
+      </li>
+    );
   };
 
   return (
@@ -154,46 +261,73 @@ export default function CategoryManager({
 
         {/* 新增/编辑表单 */}
         <div className="px-6 py-4 border-b border-secondary-200 bg-secondary-50">
-          <div className="flex items-end gap-3">
-            <div className="flex-1">
-              <label className="block text-sm font-medium text-secondary-600 mb-1">
-                分类名称
-              </label>
-              <input
-                type="text"
-                value={formName}
-                onChange={(e) => setFormName(e.target.value)}
-                placeholder="请输入分类名称"
-                className="w-full px-3 py-2 border border-secondary-200 rounded-lg text-sm focus:outline-none focus:ring-1 focus:ring-primary-500"
-              />
+          <div className="space-y-3">
+            <div className="flex items-end gap-3">
+              <div className="flex-1">
+                <label className="block text-sm font-medium text-secondary-600 mb-1">
+                  分类名称
+                </label>
+                <input
+                  type="text"
+                  value={formName}
+                  onChange={(e) => setFormName(e.target.value)}
+                  placeholder="请输入分类名称"
+                  className="w-full px-3 py-2 border border-secondary-200 rounded-lg text-sm focus:outline-none focus:ring-1 focus:ring-primary-500"
+                />
+              </div>
+              <div className="w-24">
+                <label className="block text-sm font-medium text-secondary-600 mb-1">
+                  排序
+                </label>
+                <input
+                  type="number"
+                  value={formSortOrder}
+                  onChange={(e) => setFormSortOrder(Number(e.target.value))}
+                  className="w-full px-3 py-2 border border-secondary-200 rounded-lg text-sm focus:outline-none focus:ring-1 focus:ring-primary-500"
+                />
+              </div>
             </div>
-            <div className="w-24">
-              <label className="block text-sm font-medium text-secondary-600 mb-1">
-                排序
-              </label>
-              <input
-                type="number"
-                value={formSortOrder}
-                onChange={(e) => setFormSortOrder(Number(e.target.value))}
-                className="w-full px-3 py-2 border border-secondary-200 rounded-lg text-sm focus:outline-none focus:ring-1 focus:ring-primary-500"
-              />
-            </div>
-            <div className="flex gap-2">
-              <button
-                onClick={handleSave}
-                disabled={saving}
-                className="px-4 py-2 bg-primary-500 text-white text-sm rounded-lg hover:bg-primary-600 disabled:opacity-50"
-              >
-                {saving ? '保存中...' : editingId ? '更新' : '新增'}
-              </button>
-              {editingId && (
-                <button
-                  onClick={handleCancel}
-                  className="px-4 py-2 border border-secondary-200 text-secondary-600 text-sm rounded-lg hover:bg-secondary-100"
+
+            {/* 父分类选择 */}
+            <div className="flex items-end gap-3">
+              <div className="flex-1">
+                <label className="block text-sm font-medium text-secondary-600 mb-1">
+                  父分类（可选）
+                </label>
+                <select
+                  value={formParentId ?? ''}
+                  onChange={(e) =>
+                    setFormParentId(e.target.value ? Number(e.target.value) : null)
+                  }
+                  className="w-full px-3 py-2 border border-secondary-200 rounded-lg text-sm focus:outline-none focus:ring-1 focus:ring-primary-500"
                 >
-                  取消
+                  <option value="">顶级分类</option>
+                  {getParentOptions().map((cat) => (
+                    <option key={cat.id} value={cat.id}>
+                      {'　'.repeat(cat.level || 0)}
+                      {cat.level > 0 ? '└ ' : ''}
+                      {cat.name}
+                    </option>
+                  ))}
+                </select>
+              </div>
+              <div className="flex gap-2">
+                <button
+                  onClick={handleSave}
+                  disabled={saving}
+                  className="px-4 py-2 bg-primary-500 text-white text-sm rounded-lg hover:bg-primary-600 disabled:opacity-50"
+                >
+                  {saving ? '保存中...' : editingId ? '更新' : '新增'}
                 </button>
-              )}
+                {editingId && (
+                  <button
+                    onClick={handleCancel}
+                    className="px-4 py-2 border border-secondary-200 text-secondary-600 text-sm rounded-lg hover:bg-secondary-100"
+                  >
+                    取消
+                  </button>
+                )}
+              </div>
             </div>
           </div>
         </div>
@@ -204,44 +338,13 @@ export default function CategoryManager({
             <div className="flex items-center justify-center py-12">
               <div className="h-6 w-6 animate-spin rounded-full border-4 border-primary-200 border-t-primary-600" />
             </div>
-          ) : categories.length === 0 ? (
+          ) : flatCategories.length === 0 ? (
             <div className="flex flex-col items-center justify-center py-12 text-secondary-400">
               <p>暂无分类</p>
             </div>
           ) : (
             <ul className="divide-y divide-secondary-100">
-              {categories.map((category) => (
-                <li
-                  key={category.id}
-                  className={clsx(
-                    'flex items-center justify-between px-6 py-3 hover:bg-secondary-50',
-                    editingId === category.id && 'bg-primary-50'
-                  )}
-                >
-                  <div className="flex items-center gap-3">
-                    <span className="text-sm font-medium text-secondary-800">
-                      {category.name}
-                    </span>
-                    <span className="text-xs text-secondary-400">
-                      排序: {category.sortOrder || 0}
-                    </span>
-                  </div>
-                  <div className="flex items-center gap-2">
-                    <button
-                      onClick={() => handleEdit(category)}
-                      className="text-primary-500 hover:text-primary-700 text-sm"
-                    >
-                      编辑
-                    </button>
-                    <button
-                      onClick={() => handleDelete(category.id, category.name)}
-                      className="text-red-500 hover:text-red-700 text-sm"
-                    >
-                      删除
-                    </button>
-                  </div>
-                </li>
-              ))}
+              {flatCategories.map((category) => renderCategoryItem(category))}
             </ul>
           )}
         </div>
@@ -249,7 +352,7 @@ export default function CategoryManager({
         {/* 底部 */}
         <div className="px-6 py-4 border-t border-secondary-200 bg-secondary-50">
           <p className="text-xs text-secondary-500">
-            提示：分类删除后不可恢复，请确保分类下没有博客文章。
+            提示：支持多级分类，有子分类的分类不可直接删除。只有末级分类才能关联博客文章。
           </p>
         </div>
       </div>
